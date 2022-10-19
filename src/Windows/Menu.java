@@ -72,14 +72,14 @@ public class Menu {
 		
 		BufferedImage imgBufferedImage=null;
 		try {
-			imgBufferedImage = ImageIO.read(new File("Images/lenna.jpg"));
+			imgBufferedImage = ImageIO.read(new File("Images/lennadark.jpg"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		
-		lblNewLabel.setIcon(new ImageIcon(thresholdImage(imgBufferedImage)));
+		lblNewLabel.setIcon(new ImageIcon(stretchContrast(imgBufferedImage)));
 		System.out.println(imgBufferedImage.getRGB(20, 20));
 	}
 	
@@ -88,9 +88,9 @@ public class Menu {
 		
 		int[][] arr=new int[img.getWidth()][img.getHeight()];
 		
-		for(int i=0;i<img.getHeight();i++){ 
+		for(int i=0;i<img.getWidth();i++){ 
 			
-			for(int j=0;j<img.getWidth();j++) {
+			for(int j=0;j<img.getHeight();j++) {
 				
 				Color c=new Color(img.getRGB(i, j));
 				
@@ -139,9 +139,9 @@ public class Menu {
 		
 		float[][] arr=new float[img.getWidth()][img.getHeight()];
 		
-		for(int i=0;i<img.getHeight();i++){ 
+		for(int i=0;i<img.getWidth();i++){ 
 			
-			for(int j=0;j<img.getWidth();j++) {
+			for(int j=0;j<img.getHeight();j++) {
 				
 				Color c=new Color(img.getRGB(i, j));
 				
@@ -166,8 +166,44 @@ public class Menu {
 	}
 	
 	
-	public BufferedImage setContrast() {
+	public BufferedImage stretchContrast(BufferedImage img) {
+		//Get gray values of image
+		float[][] arr=getGrayValues(img);
 		
+		//Get min and max pixel value
+		int minGray=0;
+		int maxGray=0;
+		
+		for(int i=0; i<img.getWidth(); i++) {
+			
+			for(int j=0; j<img.getHeight(); j++) {
+				
+				if(arr[i][j]>maxGray)
+					maxGray=(int) arr[i][j];
+				
+				if(arr[i][j]<minGray)
+					minGray=(int) arr[i][j];
+			}
+			
+		}
+		
+		//Calculate stretched values
+		
+		//g(x)=255*(pixel-minGray)/(maxGray-minGray)
+		
+		for(int i=0; i<img.getWidth(); i++) {
+			
+			for(int j=0; j<img.getHeight(); j++) {
+				
+				int stretchedValue=255*((int)arr[i][j]-minGray)/Math.abs(maxGray-minGray);
+				
+				//Convert stretched gray value to RGB
+				img.setRGB(i,j,toRGB(stretchedValue));
+			}
+			
+		}
+		
+		return img;
 	}
 	
 	
