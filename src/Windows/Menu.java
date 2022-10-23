@@ -93,12 +93,7 @@ public class Menu {
 		lblNewLabel.setIcon(new ImageIcon(stretchContrast(imgBufferedImage)));
 		System.out.println(imgBufferedImage.getRGB(20, 20));
 		
-		createHistogram(getPixelValues(getGrayValues(imgBufferedImage)));
-		for (double el : getPixelValues(getGrayValues(imgBufferedImage))) {
-			System.out.println(el);
-		}
 		
-	
 	}
 	
 	
@@ -225,29 +220,35 @@ public class Menu {
 		return img;
 	}
 	
+	
 	public void createHistogram(double[] pixelValues) {
 		
 		HistogramDataset histogramDataset = new HistogramDataset();
 	
 		histogramDataset.addSeries("H1", pixelValues, 255, 0.0, 255);
 		
+		//Title and axis names
 		String plotTitle = "Hist"; 
 	    String xaxis = "number";
 	    String yaxis = "value"; 
-	     
+	    
 	    PlotOrientation orientation = PlotOrientation.VERTICAL; 
-	     
+	    
+	    //Chart preferences
 	    boolean show = false; 
 	    boolean toolTips = false;
 	    boolean urls = false; 
 	     
+	    //Chart creating with settings
 	    JFreeChart chart = ChartFactory.createHistogram( plotTitle, xaxis, yaxis, 
 	        		histogramDataset, orientation, show, toolTips, urls);
 		
+	    //Chartframe settings
 	    ChartFrame frame=new ChartFrame("deneme", chart);
 	    frame.setSize(300, 300);
 	    frame.setVisible(true);
 	}
+
 	
 	//Returning double[] for histogram chart
  	public double[] getPixelValues(double[][] imgGray) {
