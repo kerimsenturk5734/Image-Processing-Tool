@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 
 import javax.swing.JPanel;
 import java.awt.FlowLayout;
@@ -24,6 +25,15 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartFrame;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.statistics.HistogramDataset;
+
 import javax.swing.JLabel;
 
 public class Menu {
@@ -51,6 +61,7 @@ public class Menu {
 	 */
 	public Menu() {
 		initialize();
+		
 	}
 
 	/**
@@ -81,6 +92,13 @@ public class Menu {
 		
 		lblNewLabel.setIcon(new ImageIcon(stretchContrast(imgBufferedImage)));
 		System.out.println(imgBufferedImage.getRGB(20, 20));
+		
+		createHistogram(getPixelValues(getGrayValues(imgBufferedImage)));
+		for (double el : getPixelValues(getGrayValues(imgBufferedImage))) {
+			System.out.println(el);
+		}
+		
+	
 	}
 	
 	
@@ -116,7 +134,7 @@ public class Menu {
 	
 	public BufferedImage thresholdImage(BufferedImage img) {
 		
-		float[][] arr=getGrayValues(img);
+		double[][] arr=getGrayValues(img);
 		
 		for(int i=0;i<img.getWidth();i++) {
 			
@@ -135,9 +153,9 @@ public class Menu {
 	}
 	
 	
-	public float[][] getGrayValues(BufferedImage img){
+	public double[][] getGrayValues(BufferedImage img){
 		
-		float[][] arr=new float[img.getWidth()][img.getHeight()];
+		double[][] arr=new double[img.getWidth()][img.getHeight()];
 		
 		for(int i=0;i<img.getWidth();i++){ 
 			
@@ -162,13 +180,14 @@ public class Menu {
 	public int toRGB(int value) {
 		
 		//You can use RGB(gray,gray,gray) instead of that
+		
 		return value * 0x00010101;
 	}
 	
 	
 	public BufferedImage stretchContrast(BufferedImage img) {
 		//Get gray values of image
-		float[][] arr=getGrayValues(img);
+		double[][] arr=getGrayValues(img);
 		
 		//Get min and max pixel value
 		int minGray=0;
@@ -206,9 +225,52 @@ public class Menu {
 		return img;
 	}
 	
+	public void createHistogram(double[] pixelValues) {
+		
+		HistogramDataset histogramDataset = new HistogramDataset();
 	
+		histogramDataset.addSeries("H1", pixelValues, 255, 0.0, 255);
+		
+		String plotTitle = "Hist"; 
+	    String xaxis = "number";
+	    String yaxis = "value"; 
+	     
+	    PlotOrientation orientation = PlotOrientation.VERTICAL; 
+	     
+	    boolean show = false; 
+	    boolean toolTips = false;
+	    boolean urls = false; 
+	     
+	    JFreeChart chart = ChartFactory.createHistogram( plotTitle, xaxis, yaxis, 
+	        		histogramDataset, orientation, show, toolTips, urls);
+		
+	    ChartFrame frame=new ChartFrame("deneme", chart);
+	    frame.setSize(300, 300);
+	    frame.setVisible(true);
+	}
 	
-	
+	//Returning double[] for histogram chart
+ 	public double[] getPixelValues(double[][] imgGray) {
+		
+ 		//Getting height and width of img
+ 		int width=imgGray[0].length;
+ 		int height=imgGray[1].length;
+ 		
+		double[] pixelValues=new double[width*height];
+		
+		//Traveling all pixels
+		int index=0;
+		for(int i=0;i<width;i++) {
+			
+			for(int j=0;j<height;j++) {
+				
+				pixelValues[index]=imgGray[i][j];
+				index++;
+			}
+		}
+		
+		return pixelValues;
+	}
 	
 	
 	
