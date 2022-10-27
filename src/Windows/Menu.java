@@ -77,23 +77,40 @@ public class Menu {
 		panel.setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setBounds(249, 50, 512, 512);
+		lblNewLabel.setBounds(592, 34, 512, 512);
 		panel.add(lblNewLabel);
-		
 		
 		BufferedImage imgBufferedImage=null;
 		try {
-			imgBufferedImage = ImageIO.read(new File("Images/lennadark.jpg"));
+			imgBufferedImage = ImageIO.read(new File("Images/lenna.jpg"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		
-		lblNewLabel.setIcon(new ImageIcon(stretchContrast(imgBufferedImage)));
-		System.out.println(imgBufferedImage.getRGB(20, 20));
+		//////ÝÞLENMÝÞ///////
+		BufferedImage img=thresholdImage(imgToGray(imgBufferedImage));
+		createHistogram(getPixelValues(getGrayValues(img)),"Ýþlenmiþ");
+
+		lblNewLabel.setIcon(new ImageIcon(img));
 		
+		BufferedImage imgOriginal=null;
+		try {
+			imgOriginal = ImageIO.read(new File("Images/lenna.jpg"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
+		////ORIJINAL/////
+		JLabel lblNewLabel_1 = new JLabel("");
+		lblNewLabel_1.setBounds(29, 34, 512, 512);
+		panel.add(lblNewLabel_1);
+		
+		lblNewLabel_1.setIcon(new ImageIcon(imgToGray(imgOriginal)));
+		createHistogram(getPixelValues(getGrayValues(imgOriginal)),"Orijinal");
+		//System.out.println(imgBufferedImage.getRGB(20, 20));
 	}
 	
 	
@@ -221,14 +238,14 @@ public class Menu {
 	}
 	
 	
-	public void createHistogram(double[] pixelValues) {
+	public void createHistogram(double[] pixelValues,String histName) {
 		
 		HistogramDataset histogramDataset = new HistogramDataset();
 	
 		histogramDataset.addSeries("H1", pixelValues, 255, 0.0, 255);
 		
 		//Title and axis names
-		String plotTitle = "Hist"; 
+		String plotTitle = histName; 
 	    String xaxis = "number";
 	    String yaxis = "value"; 
 	    
@@ -244,7 +261,7 @@ public class Menu {
 	        		histogramDataset, orientation, show, toolTips, urls);
 		
 	    //Chartframe settings
-	    ChartFrame frame=new ChartFrame("deneme", chart);
+	    ChartFrame frame=new ChartFrame(histName, chart);
 	    frame.setSize(300, 300);
 	    frame.setVisible(true);
 	}
@@ -272,15 +289,4 @@ public class Menu {
 		
 		return pixelValues;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }
