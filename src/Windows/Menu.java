@@ -64,9 +64,7 @@ public class Menu {
 		
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
+	
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 1128, 661);
@@ -90,7 +88,7 @@ public class Menu {
 		
 		
 		//////ÝÞLENMÝÞ///////
-		BufferedImage img=thresholdImage(imgToGray(imgBufferedImage));
+		BufferedImage img=imgToNegative(imgBufferedImage);
 		createHistogram(getPixelValues(getGrayValues(img)),"Ýþlenmiþ");
 
 		lblNewLabel.setIcon(new ImageIcon(img));
@@ -108,7 +106,7 @@ public class Menu {
 		lblNewLabel_1.setBounds(29, 34, 512, 512);
 		panel.add(lblNewLabel_1);
 		
-		lblNewLabel_1.setIcon(new ImageIcon(imgToGray(imgOriginal)));
+		lblNewLabel_1.setIcon(new ImageIcon(imgOriginal));
 		createHistogram(getPixelValues(getGrayValues(imgOriginal)),"Orijinal");
 		//System.out.println(imgBufferedImage.getRGB(20, 20));
 	}
@@ -262,7 +260,7 @@ public class Menu {
 		
 	    //Chartframe settings
 	    ChartFrame frame=new ChartFrame(histName, chart);
-	    frame.setSize(300, 300);
+	    frame.setSize(1920, 1080);
 	    frame.setVisible(true);
 	}
 
@@ -289,4 +287,25 @@ public class Menu {
 		
 		return pixelValues;
 	}
+
+ 	public BufferedImage imgToNegative(BufferedImage img) {
+ 		//Get gray image
+ 		BufferedImage grayImage=imgToGray(img);
+ 		
+ 		//Iterate all pixels
+ 		for(int i=0;i<grayImage.getWidth();i++ ) {
+ 			
+ 			for(int j=0;j<grayImage.getHeight();j++) {
+ 				
+ 				//Create new color newColor=new Color(255-curColor.getred,255-curColor.getgreen,255-curColor.getblue)
+ 				Color curColor=new Color(grayImage.getRGB(i, j));
+ 				Color newColor=new Color(255-curColor.getRed(),255-curColor.getGreen(),255-curColor.getBlue());
+ 				
+ 		 		//Set the newColor to currentPixel
+ 				grayImage.setRGB(i, j, newColor.getRGB());
+ 			}
+ 		}
+ 		
+ 		return grayImage;
+ 	}
 }
