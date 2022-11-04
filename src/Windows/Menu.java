@@ -80,7 +80,7 @@ public class Menu {
 		
 		BufferedImage imgBufferedImage=null;
 		try {
-			imgBufferedImage = ImageIO.read(new File("Images/lenna.jpg"));
+			imgBufferedImage = ImageIO.read(new File("Images/lennadark.jpg"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -88,14 +88,14 @@ public class Menu {
 		
 		
 		//////ÝÞLENMÝÞ///////
-		BufferedImage img=imgToNegative(imgBufferedImage);
+		BufferedImage img=setBrightness(imgBufferedImage,100);
 		createHistogram(getPixelValues(getGrayValues(img)),"Ýþlenmiþ");
 
 		lblNewLabel.setIcon(new ImageIcon(img));
 		
 		BufferedImage imgOriginal=null;
 		try {
-			imgOriginal = ImageIO.read(new File("Images/lenna.jpg"));
+			imgOriginal = ImageIO.read(new File("Images/lennadark.jpg"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -307,5 +307,19 @@ public class Menu {
  		}
  		
  		return grayImage;
+ 	}
+ 	
+ 	public BufferedImage setBrightness(BufferedImage img,int amountOfBrightness) {
+ 		for(int i=0;i<img.getWidth();i++) {
+ 			
+ 			for(int j=0;j<img.getHeight();j++) {
+ 				int currPixelValue=img.getRGB(i, j);
+ 				
+ 				img.setRGB(i, j, currPixelValue+toRGB(amountOfBrightness));
+ 				
+ 			}
+ 		}
+ 		
+ 		return img;
  	}
 }
