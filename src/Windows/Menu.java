@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
 import java.awt.image.Raster;
+import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
@@ -80,7 +81,7 @@ public class Menu {
 		
 		BufferedImage imgBufferedImage=null;
 		try {
-			imgBufferedImage = ImageIO.read(new File("Images/lennadark.jpg"));
+			imgBufferedImage = ImageIO.read(new File("Images/lenna.jpg"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -88,14 +89,14 @@ public class Menu {
 		
 		
 		//////ÝÞLENMÝÞ///////
-		BufferedImage img=stretchContrast(imgBufferedImage,500);
+		BufferedImage img=histogramEq(imgBufferedImage,255);
 		createHistogram(getPixelValues(getGrayValues(img)),"Ýþlenmiþ");
 
 		lblNewLabel.setIcon(new ImageIcon(img));
 		
 		BufferedImage imgOriginal=null;
 		try {
-			imgOriginal = ImageIO.read(new File("Images/lennadark.jpg"));
+			imgOriginal = ImageIO.read(new File("Images/lenna.jpg"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -235,6 +236,47 @@ public class Menu {
 		return img;
 	}
 	
+	public BufferedImage histogramEq(BufferedImage src,float eqFactor) {
+		
+		BufferedImage nImg = new BufferedImage(src.getWidth(), src.getHeight(),
+                BufferedImage.TYPE_BYTE_GRAY);
+		
+		WritableRaster wr = src.getRaster();
+		WritableRaster er = nImg.getRaster();
+		
+		int totpix= wr.getWidth()*wr.getHeight();
+		int[] histogram = new int[256];
+		
+		for (int x = 0; x < wr.getWidth(); x++) {
+			for (int y = 0; y < wr.getHeight(); y++) {
+			   histogram[wr.getSample(x, y, 0)]++;
+			}
+		}
+		
+		int[] chistogram = new int[256];
+		chistogram[0] = histogram[0];
+		
+		for(int i=1;i<256;i++){
+			chistogram[i] = chistogram[i-1] + histogram[i];
+		}
+		
+		float[] arr = new float[256];
+		
+		for(int i=0;i<256;i++){
+			arr[i] =  (float)((chistogram[i]*eqFactor)/(float)totpix);
+		}
+		
+		for (int x = 0; x < wr.getWidth(); x++) {
+			for (int y = 0; y < wr.getHeight(); y++) {
+			   int nVal = (int) arr[wr.getSample(x, y, 0)];
+			   er.setSample(x, y, 0, nVal);
+			}
+		}
+		
+		nImg.setData(er);
+		
+		return nImg;
+	}
 	
 	public void createHistogram(double[] pixelValues,String histName) {
 		
@@ -260,7 +302,7 @@ public class Menu {
 		
 	    //Chartframe settings
 	    ChartFrame frame=new ChartFrame(histName, chart);
-	    frame.setSize(1920, 1080);
+	    frame.setSize(600, 500);
 	    frame.setVisible(true);
 	}
 
@@ -269,7 +311,7 @@ public class Menu {
  	public double[] getPixelValues(double[][] imgGray) {
 		
  		//Getting height and width of img
- 		int width=imgGray[0].length;
+ 		int width=imgGray[0].length-1;
  		int height=imgGray[1].length;
  		
 		double[] pixelValues=new double[width*height];
