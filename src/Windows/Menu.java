@@ -88,7 +88,7 @@ public class Menu {
 		
 		
 		//////ÝÞLENMÝÞ///////
-		BufferedImage img=setBrightness(imgBufferedImage,100);
+		BufferedImage img=stretchContrast(imgBufferedImage,500);
 		createHistogram(getPixelValues(getGrayValues(img)),"Ýþlenmiþ");
 
 		lblNewLabel.setIcon(new ImageIcon(img));
@@ -195,7 +195,7 @@ public class Menu {
 	}
 	
 	
-	public BufferedImage stretchContrast(BufferedImage img) {
+	public BufferedImage stretchContrast(BufferedImage img,int contrastBound) {
 		//Get gray values of image
 		double[][] arr=getGrayValues(img);
 		
@@ -218,13 +218,13 @@ public class Menu {
 		
 		//Calculate stretched values
 		
-		//g(x)=255*(pixel-minGray)/(maxGray-minGray)
+		//g(x)=contrastBound*(pixel-minGray)/(maxGray-minGray)
 		
 		for(int i=0; i<img.getWidth(); i++) {
 			
 			for(int j=0; j<img.getHeight(); j++) {
 				
-				int stretchedValue=255*((int)arr[i][j]-minGray)/Math.abs(maxGray-minGray);
+				int stretchedValue=contrastBound*((int)arr[i][j]-minGray)/Math.abs(maxGray-minGray);
 				
 				//Convert stretched gray value to RGB
 				img.setRGB(i,j,toRGB(stretchedValue));
@@ -322,4 +322,5 @@ public class Menu {
  		
  		return img;
  	}
+
 }
