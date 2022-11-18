@@ -2,7 +2,7 @@ package Filters;
 
 public class Filter {
 	
-	private int[][] mask;
+	protected int[][] mask;
 	
 	public Filter(int width,int height) {
 	

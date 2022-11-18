@@ -35,6 +35,7 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.statistics.HistogramDataset;
 
+import Filters.Filter;
 import Filters.FilterManager;
 import Filters.IFilterDao;
 import Filters.IFilterService;
@@ -67,7 +68,12 @@ public class Menu {
 	 */
 	public Menu() {
 		initialize();
-		
+		Filter filter=new GaussFilter(5, 5);
+		for(int i=0;i<filter.getMask().length;i++) {
+			for(int j=0;j<filter.getMask()[0].length;j++) {
+				System.out.println(filter.getMask()[i][j]);
+			}
+		}
 	}
 
 	
