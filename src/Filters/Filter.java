@@ -6,7 +6,19 @@ public class Filter {
 	
 	public Filter(int width,int height) {
 	
+		if(width!=height)
+			throw new IllegalArgumentException("Mask must be square matrix form.");
+		
 		mask=new int[width][height];
+		
+		createMask();
+	}
+	
+	public Filter(int width,int height,int maskVal) {
+
+		this(width,height);
+		
+		createMask(maskVal);
 	}
 
 	public int getWidth() {
@@ -25,4 +37,23 @@ public class Filter {
 		this.mask=mask;
 	}
 	
+	protected void createMask() {
+		//fill ones in the mask as default
+		
+		for(int i=0;i<mask.length;i++) {
+			for(int j=0;j<mask[0].length;j++) {
+				mask[i][j]=1;
+			}
+		}
+	}
+	
+	protected void createMask(int maskVal) {
+		//fill maskVal in the mask 
+		
+		for(int i=0;i<mask.length;i++) {
+			for(int j=0;j<mask[0].length;j++) {
+				mask[i][j]=maskVal;
+			}
+		}
+	}
 }
