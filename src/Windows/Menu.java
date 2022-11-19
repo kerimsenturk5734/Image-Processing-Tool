@@ -40,6 +40,7 @@ import Filters.FilterManager;
 import Filters.IFilterDao;
 import Filters.IFilterService;
 import Filters.ImageFilters.GaussFilter;
+import Filters.ImageFilters.MedianFilter;
 
 import javax.swing.JLabel;
 
@@ -74,7 +75,7 @@ public class Menu {
 	
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 1128, 661);
+		frame.setBounds(0, 0, 1920, 1080);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JPanel panel = new JPanel();
@@ -82,12 +83,12 @@ public class Menu {
 		panel.setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setBounds(592, 34, 512, 512);
+		lblNewLabel.setBounds(792, 10, 738, 811);
 		panel.add(lblNewLabel);
 		
 		BufferedImage imgBufferedImage=null;
 		try {
-			imgBufferedImage = ImageIO.read(new File("Images/lenna.jpg"));
+			imgBufferedImage = ImageIO.read(new File("Images/lennasaltandpepper.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -95,7 +96,7 @@ public class Menu {
 		
 		
 		//////ÝÞLENMÝÞ///////
-		FilterManager filter=new FilterManager(new GaussFilter(5));
+		FilterManager filter=new FilterManager(new MedianFilter(9));
 		BufferedImage img=filter.applyFilter(imgBufferedImage);
 		createHistogram(getPixelValues(getGrayValues(img)),"Ýþlenmiþ");
 
@@ -103,7 +104,7 @@ public class Menu {
 		
 		BufferedImage imgOriginal=null;
 		try {
-			imgOriginal = ImageIO.read(new File("Images/lenna.jpg"));
+			imgOriginal = ImageIO.read(new File("Images/lennasaltandpepper.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -111,7 +112,7 @@ public class Menu {
 		
 		////ORIJINAL/////
 		JLabel lblNewLabel_1 = new JLabel("");
-		lblNewLabel_1.setBounds(29, 34, 512, 512);
+		lblNewLabel_1.setBounds(29, 34, 713, 801);
 		panel.add(lblNewLabel_1);
 		
 		lblNewLabel_1.setIcon(new ImageIcon(imgOriginal));
@@ -329,8 +330,13 @@ public class Menu {
 			
 			for(int j=0;j<height;j++) {
 				
-				pixelValues[index]=imgGray[i][j];
-				index++;
+				try {
+					pixelValues[index]=imgGray[i][j];
+					index++;
+				} catch (Exception e) {
+					new IndexOutOfBoundsException("out of bound image");
+					index++;
+				}
 			}
 		}
 		
