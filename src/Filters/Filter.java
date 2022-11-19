@@ -4,30 +4,24 @@ public class Filter {
 	
 	protected int[][] mask;
 	
-	public Filter(int width,int height) {
+	public Filter(int format) {
 	
-		if(width!=height)
-			throw new IllegalArgumentException("Mask must be square matrix form.");
-		
-		mask=new int[width][height];
+		mask=new int[format][format];
 		
 		createMask();
 	}
 	
-	public Filter(int width,int height,int maskVal) {
+	public Filter(int format,int maskVal) {
 
-		this(width,height);
+		this(format);
 		
 		createMask(maskVal);
 	}
 
-	public int getWidth() {
+	public int getFormat() {
 		return mask[0].length;
 	}
 
-	public int getHeight() {
-		return mask[1].length;
-	}
 
 	public int[][] getMask() {
 		return mask;
@@ -55,5 +49,16 @@ public class Filter {
 				mask[i][j]=maskVal;
 			}
 		}
+	}
+	
+	public int sumOfMaskCoEfficent() {
+		int sum=0;
+		for(int i=0;i<mask.length;i++) {
+			for(int j=0;j<mask[0].length;j++) {
+				sum+=mask[i][j];
+			}
+		}
+		
+		return sum;
 	}
 }

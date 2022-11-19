@@ -68,12 +68,7 @@ public class Menu {
 	 */
 	public Menu() {
 		initialize();
-		Filter filter=new GaussFilter(5, 5);
-		for(int i=0;i<filter.getMask().length;i++) {
-			for(int j=0;j<filter.getMask()[0].length;j++) {
-				System.out.println(filter.getMask()[i][j]);
-			}
-		}
+		
 	}
 
 	
@@ -100,7 +95,8 @@ public class Menu {
 		
 		
 		//////İŞLENMİŞ///////
-		BufferedImage img=histogramEq(imgBufferedImage,255);
+		FilterManager filter=new FilterManager(new GaussFilter(5));
+		BufferedImage img=filter.applyFilter(imgBufferedImage);
 		createHistogram(getPixelValues(getGrayValues(img)),"İşlenmiş");
 
 		lblNewLabel.setIcon(new ImageIcon(img));

@@ -1,7 +1,10 @@
 package Filters.ImageFilters;
 
+
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 
+import javax.imageio.event.IIOReadWarningListener;
 
 import Filters.Filter;
 import Filters.IFilterDao;
@@ -9,15 +12,52 @@ import Filters.IFilterDao;
 
 public class GaussFilter extends Filter implements IFilterDao{
 
-	public GaussFilter(int width, int height) {
-		super(width, height);
+	public GaussFilter(int format) {
+		super(format);
 	}
 
 
 	@Override
 	public BufferedImage applyFilter(BufferedImage img) {
-		// TODO Auto-generated method stub
-		return null;
+
+		int W=getFormat();
+		
+		int sumR=0;
+		int sumG=0;
+		int sumB=0;
+		
+		for(int x=0;x<img.getWidth()-W;x++) {
+
+			for(int y=0;y<img.getHeight()-W;y++) {
+				
+				for(int i=0;i<W;i++) {
+
+					for(int j=0;j<W;j++) {
+						
+						
+						Color sampledColor=new Color(img.getRGB(x+i, y+j));
+						
+						sumR+=mask[i][j]*sampledColor.getRed();
+						sumG+=mask[i][j]*sampledColor.getGreen();
+						sumB+=mask[i][j]*sampledColor.getBlue();
+						
+					}
+				}
+				
+				int sumOfCoEff=sumOfMaskCoEfficent();
+				try {
+					img.setRGB(x+W/2, y+W/2,new Color(sumR/sumOfCoEff,sumG/sumOfCoEff,sumB/sumOfCoEff).getRGB());
+				} catch (Exception e) {
+					System.out.println("out of bound");
+				}
+				
+				sumR=0;
+				sumG=0;
+				sumB=0;
+			}
+		}
+		
+		return img;
 	}
 
 	@Override
@@ -25,7 +65,7 @@ public class GaussFilter extends Filter implements IFilterDao{
 		System.out.println("Gauss Filtresi oluþturuldu");
 		//create mask and assign mask to this.mask[][]
 	
-		double sigma = 2;
+		double sigma = 1;
 		int W = mask.length;
 		double kernel[][]=new double[W][W];
 		double mean = W/2;
@@ -46,8 +86,13 @@ public class GaussFilter extends Filter implements IFilterDao{
 		
 		
 		for (int x = 0; x < W; ++x) 
-		    for (int y = 0; y < W; ++y)
-		        mask[x][y]=(int)Math.round(kernel[x][y]*255);
+		    for (int y = 0; y < W; ++y) 
+		    {
+		        mask[x][y]=(int) Math.round(kernel[x][y]*255);
+		        System.out.println(mask[x][y]);
+		    }
+		
+
 	}
 
 }
