@@ -1,5 +1,6 @@
 package Filters.ImageFilters;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 
 import Filters.Filter;
@@ -13,7 +14,41 @@ public class GaussFilter extends Filter {
 
 	@Override
 	public BufferedImage applyFilter(BufferedImage img) {
-		return super.applyFilter(img);
+		int W=getFormat();
+		
+		int sumR=0;
+		int sumG=0;
+		int sumB=0;
+		
+		for(int x=0;x<img.getWidth()-W;x++) {
+
+			for(int y=0;y<img.getHeight()-W;y++) {
+				
+				for(int i=0;i<W;i++) {
+
+					for(int j=0;j<W;j++) {
+											
+						Color sampledColor=new Color(img.getRGB(x+i, y+j));
+						
+						sumR+=mask[i][j]*sampledColor.getRed();
+						sumG+=mask[i][j]*sampledColor.getGreen();
+						sumB+=mask[i][j]*sampledColor.getBlue();
+						
+					}
+				}
+				
+				int sumOfCoEff=sumOfMaskCoEfficent();
+				try {
+					img.setRGB(x+W/2, y+W/2,new Color(sumR/sumOfCoEff,sumG/sumOfCoEff,sumB/sumOfCoEff).getRGB());
+				} catch (Exception e) {
+					System.out.println("out of bound");
+				}
+				
+				sumR=sumG=sumB=0;			
+			}
+		}
+		
+		return img;
 	}
 
 	@Override

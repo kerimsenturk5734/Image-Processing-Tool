@@ -14,6 +14,10 @@ public class MedianFilter extends Filter{
 
 	public MedianFilter(int format) {
 		super(format);
+		
+		if(format%2==0)
+			throw new IllegalArgumentException("Format must be odd value in Median Filter");
+		
 	}
 
 	

@@ -88,7 +88,7 @@ public class Menu {
 		
 		BufferedImage imgBufferedImage=null;
 		try {
-			imgBufferedImage = ImageIO.read(new File("Images/lennasaltandpepper.png"));
+			imgBufferedImage = ImageIO.read(new File("Images/lenna.jpg"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -96,7 +96,8 @@ public class Menu {
 		
 		
 		//////ÝÞLENMÝÞ///////
-		FilterManager filter=new FilterManager(new MedianFilter(9));
+		int[][] mask=new int[][] {{1,1,1},{1,-4,1},{0,1,0}};
+		FilterManager filter=new FilterManager(new GaussFilter(5));
 		BufferedImage img=filter.applyFilter(imgBufferedImage);
 		createHistogram(getPixelValues(getGrayValues(img)),"Ýþlenmiþ");
 
@@ -104,7 +105,7 @@ public class Menu {
 		
 		BufferedImage imgOriginal=null;
 		try {
-			imgOriginal = ImageIO.read(new File("Images/lennasaltandpepper.png"));
+			imgOriginal = ImageIO.read(new File("Images/lenna.jpg"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
