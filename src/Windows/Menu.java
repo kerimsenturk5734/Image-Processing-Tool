@@ -40,6 +40,7 @@ import Filters.FilterManager;
 import Filters.IFilterDao;
 import Filters.IFilterService;
 import Filters.ImageFilters.GaussFilter;
+import Filters.ImageFilters.HighFilter;
 import Filters.ImageFilters.MedianFilter;
 
 import javax.swing.JLabel;
@@ -97,7 +98,7 @@ public class Menu {
 		
 		//////ÝÞLENMÝÞ///////
 		int[][] mask=new int[][] {{1,1,1},{1,-4,1},{0,1,0}};
-		FilterManager filter=new FilterManager(new GaussFilter(5));
+		FilterManager filter=new FilterManager(new HighFilter(HighFilter.PREWITT_KERNEL));
 		BufferedImage img=filter.applyFilter(imgBufferedImage);
 		createHistogram(getPixelValues(getGrayValues(img)),"Ýþlenmiþ");
 
