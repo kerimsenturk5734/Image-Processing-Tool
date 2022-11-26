@@ -43,6 +43,7 @@ import Filters.ImageFilters.GaussFilter;
 import Filters.ImageFilters.HighFilter;
 import Filters.ImageFilters.LaplaceFilter;
 import Filters.ImageFilters.MedianFilter;
+import Geometric.Geo;
 
 import javax.swing.JLabel;
 
@@ -90,7 +91,7 @@ public class Menu {
 		
 		BufferedImage imgBufferedImage=null;
 		try {
-			imgBufferedImage = ImageIO.read(new File("Images/akciger.png"));
+			imgBufferedImage = ImageIO.read(new File("Images/lenna.jpg"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -99,15 +100,15 @@ public class Menu {
 		
 		//////ÝÞLENMÝÞ///////
 		int[][] mask=new int[][] {{1,1,1},{1,-4,1},{0,1,0}};
-		FilterManager filter=new FilterManager(new HighFilter(HighFilter.PREWITT_KERNEL));
-		BufferedImage img=filter.applyFilter(imgBufferedImage);
+		//FilterManager filter=new FilterManager(new HighFilter(HighFilter.PREWITT_KERNEL));
+		BufferedImage img=Geo.invertY(imgBufferedImage);
 		createHistogram(getPixelValues(getGrayValues(img)),"Ýþlenmiþ");
 
 		lblNewLabel.setIcon(new ImageIcon(img));
 		
 		BufferedImage imgOriginal=null;
 		try {
-			imgOriginal = ImageIO.read(new File("Images/akciger.png"));
+			imgOriginal = ImageIO.read(new File("Images/lenna.jpg"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
