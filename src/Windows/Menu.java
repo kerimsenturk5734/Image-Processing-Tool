@@ -41,6 +41,7 @@ import Filters.IFilterDao;
 import Filters.IFilterService;
 import Filters.ImageFilters.GaussFilter;
 import Filters.ImageFilters.HighFilter;
+import Filters.ImageFilters.LaplaceFilter;
 import Filters.ImageFilters.MedianFilter;
 
 import javax.swing.JLabel;
@@ -89,7 +90,7 @@ public class Menu {
 		
 		BufferedImage imgBufferedImage=null;
 		try {
-			imgBufferedImage = ImageIO.read(new File("Images/lenna.jpg"));
+			imgBufferedImage = ImageIO.read(new File("Images/akciger.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -106,7 +107,7 @@ public class Menu {
 		
 		BufferedImage imgOriginal=null;
 		try {
-			imgOriginal = ImageIO.read(new File("Images/lenna.jpg"));
+			imgOriginal = ImageIO.read(new File("Images/akciger.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
