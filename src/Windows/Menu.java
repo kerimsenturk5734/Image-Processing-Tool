@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import java.awt.Panel;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
@@ -100,8 +101,8 @@ public class Menu {
 		
 		//////ÝÞLENMÝÞ///////
 		int[][] mask=new int[][] {{1,1,1},{1,-4,1},{0,1,0}};
-		//FilterManager filter=new FilterManager(new HighFilter(HighFilter.PREWITT_KERNEL));
-		BufferedImage img=Geo.invertY(imgBufferedImage);
+		//FilterManager filter=new FilterManager(new GaussFilter(5));
+		BufferedImage img=Geo.rotate(imgBufferedImage,-25);
 		createHistogram(getPixelValues(getGrayValues(img)),"Ýþlenmiþ");
 
 		lblNewLabel.setIcon(new ImageIcon(img));
