@@ -42,9 +42,6 @@ public class Geo {
 		return imgInvert;
 	}
 	
-	public static BufferedImage rotate(BufferedImage img) {
-		return null;
-	}
 	
 	public static BufferedImage rotate( BufferedImage img, double degrees ) {
 	    int width  = img.getWidth();
@@ -72,5 +69,32 @@ public class Geo {
 	        }
 	    }
 	   return newImage;
+	}
+
+	public static BufferedImage setOffSet(BufferedImage img,int xSet,int ySet) {
+		int w=img.getWidth();
+		int h=img.getHeight();
+		
+		BufferedImage imgOffSeted=new BufferedImage(w,h,BufferedImage.TYPE_INT_RGB);
+		
+		for(int x=0;x<w;x++) {
+			
+			for(int y=0;y<h;y++) {
+				
+				int offSetVal=0;
+				
+				offSetVal=img.getRGB(x,y);
+				
+				int xx=x+xSet;
+				int yy=y+ySet;
+				
+				if(!(xx>=w || (yy>=h) || (xx<0) || (yy<0))){
+					imgOffSeted.setRGB(x+xSet, y+ySet, offSetVal);
+				}
+				
+			}
+		}
+		
+		return imgOffSeted;
 	}
 }
