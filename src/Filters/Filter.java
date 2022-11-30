@@ -89,7 +89,7 @@ public class Filter implements IFilterDao{
 		return null;
 	}
 	
-	protected int[][] getGrayValues(BufferedImage img){
+	public static int[][] getGrayValues(BufferedImage img){
 		
 		int[][] arr=new int[img.getWidth()][img.getHeight()];
 		
@@ -112,7 +112,7 @@ public class Filter implements IFilterDao{
 		return arr;
 	}
 	
-	protected int toRGB(int value) {
+	public static int toRGB(int value) {
 		
 		//You can use RGB(gray,gray,gray) instead of that
 		

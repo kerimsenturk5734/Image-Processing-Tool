@@ -42,7 +42,6 @@ public class Geo {
 		return imgInvert;
 	}
 	
-	
 	public static BufferedImage rotate( BufferedImage img, double degrees ) {
 	    int width  = img.getWidth();
 	    int height = img.getHeight();
@@ -96,5 +95,10 @@ public class Geo {
 		}
 		
 		return imgOffSeted;
+	}
+
+	public static BufferedImage reScale(BufferedImage img,double scaleFactor) {
+		
+		return null;
 	}
 }

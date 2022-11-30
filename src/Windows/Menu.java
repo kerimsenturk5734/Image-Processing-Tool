@@ -45,6 +45,7 @@ import Filters.ImageFilters.HighFilter;
 import Filters.ImageFilters.LaplaceFilter;
 import Filters.ImageFilters.MedianFilter;
 import Geometric.Geo;
+import Morphology.Morp;
 
 import javax.swing.JLabel;
 
@@ -102,7 +103,7 @@ public class Menu {
 		//////ÝÞLENMÝÞ///////
 		int[][] mask=new int[][] {{1,1,1},{1,-4,1},{0,1,0}};
 		//FilterManager filter=new FilterManager(new GaussFilter(5));
-		BufferedImage img=Geo.setOffSet(imgBufferedImage,30,-20);
+		BufferedImage img=Morp.close(thresholdImage(imgBufferedImage),Morp.DEFAULT_KERNEL);
 		createHistogram(getPixelValues(getGrayValues(img)),"Ýþlenmiþ");
 
 		lblNewLabel.setIcon(new ImageIcon(img));
