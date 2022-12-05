@@ -44,6 +44,7 @@ import Filters.ImageFilters.GaussFilter;
 import Filters.ImageFilters.HighFilter;
 import Filters.ImageFilters.LaplaceFilter;
 import Filters.ImageFilters.MedianFilter;
+import Filters.ImageFilters.Sharp;
 import Geometric.Geo;
 import Morphology.Morp;
 
@@ -102,8 +103,8 @@ public class Menu {
 		
 		//////ÝÞLENMÝÞ///////
 		int[][] mask=new int[][] {{1,1,1},{1,-4,1},{0,1,0}};
-		//FilterManager filter=new FilterManager(new GaussFilter(5));
-		BufferedImage img=Morp.close(thresholdImage(imgBufferedImage),Morp.DEFAULT_KERNEL);
+		FilterManager filter=new FilterManager(new Sharp(Sharp.DEFAULT_KERNEL));
+		BufferedImage img=filter.applyFilter(imgBufferedImage);
 		createHistogram(getPixelValues(getGrayValues(img)),"Ýþlenmiþ");
 
 		lblNewLabel.setIcon(new ImageIcon(img));

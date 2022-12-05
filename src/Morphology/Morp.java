@@ -31,16 +31,14 @@ public class Morp {
 								dilatedImg.setRGB(x, y, Filter.toRGB(255));
 								i=kernel.length;
 								break;
+								}
 							}
 						}		
 				}
 			}
-
+	        return dilatedImg;
 	   }
 
-	        return dilatedImg;
-	}
-	
 	public static BufferedImage erode(BufferedImage img,int[][] kernel) {
 		int w = img.getWidth();
         int h = img.getHeight();
