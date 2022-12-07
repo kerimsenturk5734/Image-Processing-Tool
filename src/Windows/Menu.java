@@ -49,10 +49,17 @@ import Geometric.Geo;
 import Morphology.Morp;
 
 import javax.swing.JLabel;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import javax.swing.border.LineBorder;
+import javax.swing.border.SoftBevelBorder;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.MatteBorder;
 
 public class Menu {
 
 	private JFrame frame;
+	private JPanel panel_images;
 
 	/**
 	 * Launch the application.
@@ -81,17 +88,56 @@ public class Menu {
 	
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(0, 0, 1920, 1080);
+		frame.setBounds(0, 0, 1463, 779);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
+		/////////PANELS///////////////////////
 		JPanel panel = new JPanel();
+		panel.setBackground(Color.BLACK);
+		panel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
 		panel.setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setBounds(792, 10, 738, 811);
-		panel.add(lblNewLabel);
+		panel_images = new JPanel();
+		panel_images.setName("asda");
+		panel_images.setBackground(Color.ORANGE);
+		panel_images.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panel_images.setBounds(10, 25, 1050, 525);
+		panel.add(panel_images);
+		panel_images.setLayout(null);
 		
+		JPanel panel_image_actions = new JPanel();
+		panel_image_actions.setBackground(Color.YELLOW);
+		panel_image_actions.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+		panel_image_actions.setBounds(10, 570, 1050, 146);
+		panel.add(panel_image_actions);
+		panel_image_actions.setLayout(null);
+		
+		JPanel panel_image_processes = new JPanel();
+		panel_image_processes.setBackground(Color.GREEN);
+		panel_image_processes.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.BLUE));
+		panel_image_processes.setBounds(1084, 25, 355, 691);
+		panel.add(panel_image_processes);
+		panel_image_processes.setLayout(null);
+			
+		
+		////////////////////////////////////////
+		
+		/////////LABELS////////////////////////
+		JLabel lbl_img1 = new JLabel();
+		lbl_img1.setBackground(Color.BLACK);
+		lbl_img1.setBounds(14, 6, 512, 512);
+		panel_images.add(lbl_img1);
+		
+		JLabel lbl_img2 = new JLabel();
+		lbl_img2.setBackground(Color.BLACK);
+		lbl_img2.setBounds(536, 6, 512, 512);
+		panel_images.add(lbl_img2);
+		/////////////////////////////////////////
+		
+		
+		
+		//////////RUNTIME///////////////////////
 		BufferedImage imgBufferedImage=null;
 		try {
 			imgBufferedImage = ImageIO.read(new File("Images/lenna.jpg"));
@@ -100,15 +146,7 @@ public class Menu {
 			e.printStackTrace();
 		}
 		
-		
-		//////ÝÞLENMÝÞ///////
-		int[][] mask=new int[][] {{1,1,1},{1,-4,1},{0,1,0}};
-		FilterManager filter=new FilterManager(new Sharp(Sharp.DEFAULT_KERNEL));
-		BufferedImage img=filter.applyFilter(imgBufferedImage);
-		createHistogram(getPixelValues(getGrayValues(img)),"Ýþlenmiþ");
-
-		lblNewLabel.setIcon(new ImageIcon(img));
-		
+		////ORIJINAL/////		
 		BufferedImage imgOriginal=null;
 		try {
 			imgOriginal = ImageIO.read(new File("Images/lenna.jpg"));
@@ -117,13 +155,18 @@ public class Menu {
 			e.printStackTrace();
 		}
 		
-		////ORIJINAL/////
-		JLabel lblNewLabel_1 = new JLabel("");
-		lblNewLabel_1.setBounds(29, 34, 713, 801);
-		panel.add(lblNewLabel_1);
-		
-		lblNewLabel_1.setIcon(new ImageIcon(imgOriginal));
 		createHistogram(getPixelValues(getGrayValues(imgOriginal)),"Orijinal");
+		lbl_img1.setIcon(new ImageIcon(imgOriginal));
+		
+		
+		//////ÝÞLENMÝÞ///////
+		int[][] mask=new int[][] {{1,1,1},{1,-4,1},{0,1,0}};
+		FilterManager filter=new FilterManager(new Sharp(Sharp.DEFAULT_KERNEL));
+		BufferedImage img=filter.applyFilter(imgBufferedImage);
+		
+		createHistogram(getPixelValues(getGrayValues(img)),"Ýþlenmiþ");
+		lbl_img2.setIcon(new ImageIcon(img));
+
 		//System.out.println(imgBufferedImage.getRGB(20, 20));
 	}
 	
@@ -384,5 +427,4 @@ public class Menu {
  		
  		return img;
  	}
-
 }
