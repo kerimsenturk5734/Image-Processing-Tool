@@ -55,6 +55,12 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.MatteBorder;
+import javax.swing.event.AncestorListener;
+import javax.swing.event.AncestorEvent;
+import java.awt.Font;
+import java.awt.event.KeyEvent;
+import javax.swing.border.CompoundBorder;
+import java.awt.SystemColor;
 
 public class Menu {
 
@@ -93,28 +99,66 @@ public class Menu {
 		
 		/////////PANELS///////////////////////
 		JPanel panel = new JPanel();
-		panel.setBackground(Color.BLACK);
+		panel.setBackground(SystemColor.controlShadow);
 		panel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
 		panel.setLayout(null);
 		
 		panel_images = new JPanel();
-		panel_images.setName("asda");
-		panel_images.setBackground(Color.ORANGE);
+		panel_images.setName("");
+		panel_images.setBackground(SystemColor.controlDkShadow);
 		panel_images.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel_images.setBounds(10, 25, 1050, 525);
 		panel.add(panel_images);
 		panel_images.setLayout(null);
 		
 		JPanel panel_image_actions = new JPanel();
-		panel_image_actions.setBackground(Color.YELLOW);
-		panel_image_actions.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+		panel_image_actions.setBackground(SystemColor.controlDkShadow);
+		panel_image_actions.setBorder(new CompoundBorder(new CompoundBorder(new LineBorder(new Color(255, 255, 255)), new LineBorder(new Color(0, 0, 0))), null));
 		panel_image_actions.setBounds(10, 570, 1050, 146);
 		panel.add(panel_image_actions);
 		panel_image_actions.setLayout(null);
 		
+		JButton btn_histogram_in = new JButton("Histogram");
+		btn_histogram_in.setBackground(new Color(255, 239, 213));
+		btn_histogram_in.setFont(new Font("Monospaced", Font.BOLD, 15));
+		btn_histogram_in.setBounds(159, 25, 199, 29);
+		panel_image_actions.add(btn_histogram_in);
+		
+		JButton btn_histogram_out = new JButton("Histogram");
+		btn_histogram_out.setBackground(new Color(255, 239, 213));
+		btn_histogram_out.setFont(new Font("Monospaced", Font.BOLD, 15));
+		btn_histogram_out.setBounds(657, 25, 199, 29);
+		panel_image_actions.add(btn_histogram_out);
+		
+		JButton btn_import = new JButton("Import Image");
+		btn_import.setForeground(Color.WHITE);
+		btn_import.setBackground(new Color(255, 0, 0));
+		btn_import.setFont(new Font("Monospaced", Font.BOLD, 15));
+		btn_import.setBounds(159, 64, 199, 29);
+		panel_image_actions.add(btn_import);
+		
+		JButton btn_saveas = new JButton("Save as...");
+		btn_saveas.setBackground(SystemColor.textHighlight);
+		btn_saveas.setFont(new Font("Monospaced", Font.BOLD, 15));
+		btn_saveas.setBounds(657, 64, 199, 29);
+		panel_image_actions.add(btn_saveas);
+		
+		JButton btn_apply = new JButton("Apply");
+		btn_apply.setForeground(Color.WHITE);
+		btn_apply.setBackground(Color.GREEN);
+		btn_apply.setFont(new Font("Monospaced", Font.BOLD, 15));
+		btn_apply.setBounds(429, 49, 158, 29);
+		panel_image_actions.add(btn_apply);
+		
+		JButton btn_clear = new JButton("Clear All");
+		btn_clear.setFont(new Font("Monospaced", Font.BOLD, 15));
+		btn_clear.setBackground(Color.WHITE);
+		btn_clear.setBounds(429, 86, 158, 29);
+		panel_image_actions.add(btn_clear);
+		
 		JPanel panel_image_processes = new JPanel();
-		panel_image_processes.setBackground(Color.GREEN);
+		panel_image_processes.setBackground(SystemColor.controlDkShadow);
 		panel_image_processes.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.BLUE));
 		panel_image_processes.setBounds(1084, 25, 355, 691);
 		panel.add(panel_image_processes);
