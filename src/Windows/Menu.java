@@ -1,41 +1,22 @@
 package Windows;
 import java.awt.EventQueue;
-
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
-import java.awt.Panel;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
-import java.awt.image.ImageProducer;
-import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-
 import javax.swing.JPanel;
-import java.awt.FlowLayout;
-import java.awt.Graphics;
-import java.awt.Image;
-
-import javax.swing.Icon;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JScrollPane;
-
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartFrame;
-import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.statistics.HistogramDataset;
-
 import Filters.Filter;
 import Filters.FilterManager;
 import Filters.IFilterDao;
@@ -47,28 +28,26 @@ import Filters.ImageFilters.MedianFilter;
 import Filters.ImageFilters.Sharp;
 import Geometric.Geo;
 import Morphology.Morp;
-
 import javax.swing.JLabel;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
-import javax.swing.border.MatteBorder;
-import javax.swing.event.AncestorListener;
-import javax.swing.event.AncestorEvent;
 import java.awt.Font;
-import java.awt.event.KeyEvent;
 import javax.swing.border.CompoundBorder;
 import java.awt.SystemColor;
-import javax.swing.JTree;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EtchedBorder;
+import javax.swing.JSpinner;
+import javax.swing.JRadioButton;
+import javax.swing.border.TitledBorder;
 
 public class Menu {
 
 	private JFrame frame;
 	private JPanel panel_images;
+	private JSpinner spn_brightness;
+	private ButtonGroup rdbGroup;
 
 	/**
 	 * Launch the application.
@@ -100,120 +79,198 @@ public class Menu {
 		frame.setBounds(0, 0, 1463, 779);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		/////////PANELS///////////////////////
+		rdbGroup=new ButtonGroup();
+		
+		//......................MAIN-PANEL.....................
 		JPanel panel = new JPanel();
 		panel.setBackground(SystemColor.controlShadow);
 		panel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
 		panel.setLayout(null);
 		
-		panel_images = new JPanel();
-		panel_images.setName("");
-		panel_images.setBackground(SystemColor.controlDkShadow);
-		panel_images.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel_images.setBounds(10, 25, 1050, 525);
-		panel.add(panel_images);
-		panel_images.setLayout(null);
+			//......................IMAGE-PANEL.....................
+			panel_images = new JPanel();
+			panel_images.setName("");
+			panel_images.setBackground(SystemColor.controlDkShadow);
+			panel_images.setBorder(new LineBorder(new Color(0, 0, 0)));
+			panel_images.setBounds(10, 25, 1050, 525);
+			panel.add(panel_images);
+			panel_images.setLayout(null);
+			
+			
+			JLabel lbl_img1 = new JLabel();
+			lbl_img1.setBackground(Color.BLACK);
+			lbl_img1.setBounds(14, 6, 512, 512);
+			panel_images.add(lbl_img1);
+			
+			JLabel lbl_img2 = new JLabel();
+			lbl_img2.setBackground(Color.BLACK);
+			lbl_img2.setBounds(536, 6, 512, 512);
+			panel_images.add(lbl_img2);
+
 		
-		JPanel panel_image_actions = new JPanel();
-		panel_image_actions.setBackground(SystemColor.controlDkShadow);
-		panel_image_actions.setBorder(new CompoundBorder(new CompoundBorder(new LineBorder(new Color(255, 255, 255)), new LineBorder(new Color(0, 0, 0))), null));
-		panel_image_actions.setBounds(10, 570, 1050, 146);
-		panel.add(panel_image_actions);
-		panel_image_actions.setLayout(null);
-		
-		JButton btn_histogram_in = new JButton("Histogram");
-		btn_histogram_in.setBackground(new Color(255, 239, 213));
-		btn_histogram_in.setFont(new Font("Monospaced", Font.BOLD, 15));
-		btn_histogram_in.setBounds(159, 25, 199, 29);
-		panel_image_actions.add(btn_histogram_in);
-		
-		JButton btn_histogram_out = new JButton("Histogram");
-		btn_histogram_out.setBackground(new Color(255, 239, 213));
-		btn_histogram_out.setFont(new Font("Monospaced", Font.BOLD, 15));
-		btn_histogram_out.setBounds(657, 25, 199, 29);
-		panel_image_actions.add(btn_histogram_out);
-		
-		JButton btn_import = new JButton("Import Image");
-		btn_import.setForeground(Color.WHITE);
-		btn_import.setBackground(new Color(255, 0, 0));
-		btn_import.setFont(new Font("Monospaced", Font.BOLD, 15));
-		btn_import.setBounds(159, 64, 199, 29);
-		panel_image_actions.add(btn_import);
-		
-		JButton btn_saveas = new JButton("Save as...");
-		btn_saveas.setBackground(SystemColor.textHighlight);
-		btn_saveas.setFont(new Font("Monospaced", Font.BOLD, 15));
-		btn_saveas.setBounds(657, 64, 199, 29);
-		panel_image_actions.add(btn_saveas);
-		
-		JButton btn_apply = new JButton("Apply");
-		btn_apply.setForeground(Color.WHITE);
-		btn_apply.setBackground(Color.GREEN);
-		btn_apply.setFont(new Font("Monospaced", Font.BOLD, 15));
-		btn_apply.setBounds(429, 49, 158, 29);
-		panel_image_actions.add(btn_apply);
-		
-		JButton btn_clear = new JButton("Clear All");
-		btn_clear.setFont(new Font("Monospaced", Font.BOLD, 15));
-		btn_clear.setBackground(Color.WHITE);
-		btn_clear.setBounds(429, 86, 158, 29);
-		panel_image_actions.add(btn_clear);
-		
-		JPanel panel_image_processes = new JPanel();
-		panel_image_processes.setBackground(SystemColor.controlDkShadow);
-		panel_image_processes.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
-		panel_image_processes.setBounds(1084, 25, 355, 691);
-		panel.add(panel_image_processes);
-		panel_image_processes.setLayout(null);
-		
-		JTabbedPane tabbedPane1 = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane1.setBackground(Color.WHITE);
-		tabbedPane1.setBounds(10, 0, 335, 331);
-		panel_image_processes.add(tabbedPane1);
-		
-		JPanel panel_dottedprocess = new JPanel();
-		tabbedPane1.addTab("Dotted", null, panel_dottedprocess, null);
-		
-		JPanel panel_contrastprocess = new JPanel();
-		tabbedPane1.addTab("Contrast", null, panel_contrastprocess, null);
-		
-		JPanel panel_geometric = new JPanel();
-		tabbedPane1.addTab("Geometric", null, panel_geometric, null);
-		
-		JTabbedPane tabbedPane2 = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane2.setBackground(Color.WHITE);
-		tabbedPane2.setBounds(10, 350, 335, 331);
-		panel_image_processes.add(tabbedPane2);
-		
-		JPanel panel_low_filter = new JPanel();
-		panel_low_filter.setBackground(SystemColor.activeCaption);
-		tabbedPane2.addTab("Low Filter", null, panel_low_filter, null);
-		
-		JPanel panel_high_filter = new JPanel();
-		panel_high_filter.setBackground(SystemColor.info);
-		tabbedPane2.addTab("High Filter", null, panel_high_filter, null);
-		
-		JPanel panel_morphology = new JPanel();
-		tabbedPane2.addTab("Morphology", null, panel_morphology, null);
-		
-		JPanel panel_extras = new JPanel();
-		tabbedPane2.addTab("Extras", null, panel_extras, null);
+			//......................IMAGE-ACTION-PANEL.....................
+			JPanel panel_image_actions = new JPanel();
+			panel_image_actions.setBackground(SystemColor.controlDkShadow);
+			panel_image_actions.setBorder(new CompoundBorder(new CompoundBorder(new LineBorder(new Color(255, 255, 255)), new LineBorder(new Color(0, 0, 0))), null));
+			panel_image_actions.setBounds(10, 570, 1050, 146);
+			panel.add(panel_image_actions);
+			panel_image_actions.setLayout(null);
+			
+			JButton btn_histogram_in = new JButton("Histogram");
+			btn_histogram_in.setBackground(new Color(255, 239, 213));
+			btn_histogram_in.setFont(new Font("Monospaced", Font.BOLD, 15));
+			btn_histogram_in.setBounds(159, 25, 199, 29);
+			panel_image_actions.add(btn_histogram_in);
+			
+			JButton btn_histogram_out = new JButton("Histogram");
+			btn_histogram_out.setBackground(new Color(255, 239, 213));
+			btn_histogram_out.setFont(new Font("Monospaced", Font.BOLD, 15));
+			btn_histogram_out.setBounds(657, 25, 199, 29);
+			panel_image_actions.add(btn_histogram_out);
+			
+			JButton btn_import = new JButton("Import Image");
+			btn_import.setForeground(Color.WHITE);
+			btn_import.setBackground(new Color(255, 0, 0));
+			btn_import.setFont(new Font("Monospaced", Font.BOLD, 15));
+			btn_import.setBounds(159, 64, 199, 29);
+			panel_image_actions.add(btn_import);
+			
+			JButton btn_saveas = new JButton("Save as...");
+			btn_saveas.setBackground(SystemColor.textHighlight);
+			btn_saveas.setFont(new Font("Monospaced", Font.BOLD, 15));
+			btn_saveas.setBounds(657, 64, 199, 29);
+			panel_image_actions.add(btn_saveas);
+			
+			JButton btn_apply = new JButton("Apply");
+			btn_apply.setForeground(Color.WHITE);
+			btn_apply.setBackground(Color.GREEN);
+			btn_apply.setFont(new Font("Monospaced", Font.BOLD, 15));
+			btn_apply.setBounds(429, 49, 158, 29);
+			panel_image_actions.add(btn_apply);
+			
+			JButton btn_clear = new JButton("Clear All");
+			btn_clear.setFont(new Font("Monospaced", Font.BOLD, 15));
+			btn_clear.setBackground(Color.WHITE);
+			btn_clear.setBounds(429, 86, 158, 29);
+			panel_image_actions.add(btn_clear);
+			
+			JPanel panel_image_processes = new JPanel();
+			panel_image_processes.setBackground(SystemColor.controlDkShadow);
+			panel_image_processes.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
+			panel_image_processes.setBounds(1084, 25, 355, 691);
+			panel.add(panel_image_processes);
+			panel_image_processes.setLayout(null);
+			
+			//......................PANE-1........................
+			JTabbedPane tabbedPane1 = new JTabbedPane(JTabbedPane.TOP);
+			tabbedPane1.setBackground(Color.WHITE);
+			tabbedPane1.setBounds(10, 0, 335, 331);
+			panel_image_processes.add(tabbedPane1);
+			
+			//..................DOTTED PROCESS...................
+			JPanel panel_dottedprocess = new JPanel();
+			panel_dottedprocess.setBackground(SystemColor.controlShadow);
+			tabbedPane1.addTab("Dotted", null, panel_dottedprocess, null);
+			panel_dottedprocess.setLayout(null);
+			
+				JPanel panel_rgbtogray = new JPanel();
+				panel_rgbtogray.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+				panel_rgbtogray.setBounds(8, 20, 314, 53);
+				panel_dottedprocess.add(panel_rgbtogray);
+				panel_rgbtogray.setLayout(null);
+				
+				JRadioButton rd_btn_rgbtogray = new JRadioButton("RGB to Gray");
+				rdbGroup.add(rd_btn_rgbtogray);
+				rd_btn_rgbtogray.setBounds(20, 15, 150, 21);
+				panel_rgbtogray.add(rd_btn_rgbtogray);
+				
+				//.......................BRIGHTNESS.......................
+				JPanel panel_setbrightness = new JPanel();
+				panel_setbrightness.setLayout(null);
+				panel_setbrightness.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+				panel_setbrightness.setBounds(8, 93, 314, 53);
+				panel_dottedprocess.add(panel_setbrightness);
+				
+				JRadioButton rd_btn_setbrightness = new JRadioButton("Brightness");
+				rd_btn_setbrightness.setBounds(20, 15, 150, 21);
+				rdbGroup.add(rd_btn_setbrightness);
+				panel_setbrightness.add(rd_btn_setbrightness);
+				
+				spn_brightness = new JSpinner(new SpinnerNumberModel(0,0,255,1));
+				spn_brightness.setBounds(240, 12, 66, 28);
+				panel_setbrightness.add(spn_brightness);
+				
+				//.......................THRESHOLD.......................
+				JPanel panel_threshold = new JPanel();
+				panel_threshold.setLayout(null);
+				panel_threshold.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+				panel_threshold.setBounds(8, 166, 314, 53);
+				panel_dottedprocess.add(panel_threshold);
+				
+				JRadioButton rd_btn_threshold = new JRadioButton("Threshold");
+				rd_btn_threshold.setBounds(20, 15, 150, 21);
+				rdbGroup.add(rd_btn_threshold);
+				panel_threshold.add(rd_btn_threshold);
+				
+				JSpinner spn_threshold = new JSpinner(new SpinnerNumberModel(0,0,255,1));
+				spn_threshold.setBounds(240, 16, 66, 28);
+				panel_threshold.add(spn_threshold);
+				
+				
+				//.......................NEGATIVE.......................
+				JPanel panel_negative = new JPanel();
+				panel_negative.setLayout(null);
+				panel_negative.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+				panel_negative.setBounds(8, 239, 314, 53);
+				panel_dottedprocess.add(panel_negative);
+				
+				JRadioButton rd_btn_negative = new JRadioButton("Negative");
+				rd_btn_negative.setBounds(20, 15, 150, 21);
+				rdbGroup.add(rd_btn_negative);
+				panel_negative.add(rd_btn_negative);
+			
+			//.......................CONTRAST-PROCESS.......................
+			JPanel panel_contrastprocess = new JPanel();
+			panel_contrastprocess.setBackground(SystemColor.controlShadow);
+			tabbedPane1.addTab("Contrast", null, panel_contrastprocess, null);
+			panel_contrastprocess.setLayout(null);
+			
+			//.......................GEOMETRIC.......................
+			JPanel panel_geometric = new JPanel();
+			panel_geometric.setBackground(SystemColor.controlShadow);
+			tabbedPane1.addTab("Geometric", null, panel_geometric, null);
+			panel_geometric.setLayout(null);
+			
+			JTabbedPane tabbedPane2 = new JTabbedPane(JTabbedPane.TOP);
+			tabbedPane2.setBackground(Color.WHITE);
+			tabbedPane2.setBounds(10, 350, 335, 331);
+			panel_image_processes.add(tabbedPane2);
+			
+			JPanel panel_low_filter = new JPanel();
+			panel_low_filter.setBackground(SystemColor.controlShadow);
+			tabbedPane2.addTab("Low Filter", null, panel_low_filter, null);
+			panel_low_filter.setLayout(null);
+			
+			JPanel panel_high_filter = new JPanel();
+			panel_high_filter.setBackground(SystemColor.controlShadow);
+			tabbedPane2.addTab("High Filter", null, panel_high_filter, null);
+			panel_high_filter.setLayout(null);
+			
+			JPanel panel_morphology = new JPanel();
+			panel_morphology.setBackground(SystemColor.controlShadow);
+			tabbedPane2.addTab("Morphology", null, panel_morphology, null);
+			panel_morphology.setLayout(null);
+			
+			JPanel panel_extras = new JPanel();
+			panel_extras.setBackground(SystemColor.controlShadow);
+			tabbedPane2.addTab("Extras", null, panel_extras, null);
+			panel_extras.setLayout(null);
+				
+			
+			////////////////////////////////////////
 			
 		
-		////////////////////////////////////////
-		
-		/////////LABELS////////////////////////
-		JLabel lbl_img1 = new JLabel();
-		lbl_img1.setBackground(Color.BLACK);
-		lbl_img1.setBounds(14, 6, 512, 512);
-		panel_images.add(lbl_img1);
-		
-		JLabel lbl_img2 = new JLabel();
-		lbl_img2.setBackground(Color.BLACK);
-		lbl_img2.setBounds(536, 6, 512, 512);
-		panel_images.add(lbl_img2);
-		/////////////////////////////////////////
 		
 		
 		
