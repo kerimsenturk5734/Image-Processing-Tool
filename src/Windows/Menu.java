@@ -61,6 +61,9 @@ import java.awt.Font;
 import java.awt.event.KeyEvent;
 import javax.swing.border.CompoundBorder;
 import java.awt.SystemColor;
+import javax.swing.JTree;
+import javax.swing.JTabbedPane;
+import javax.swing.border.EtchedBorder;
 
 public class Menu {
 
@@ -159,10 +162,43 @@ public class Menu {
 		
 		JPanel panel_image_processes = new JPanel();
 		panel_image_processes.setBackground(SystemColor.controlDkShadow);
-		panel_image_processes.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.BLUE));
+		panel_image_processes.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
 		panel_image_processes.setBounds(1084, 25, 355, 691);
 		panel.add(panel_image_processes);
 		panel_image_processes.setLayout(null);
+		
+		JTabbedPane tabbedPane1 = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane1.setBackground(Color.WHITE);
+		tabbedPane1.setBounds(10, 0, 335, 331);
+		panel_image_processes.add(tabbedPane1);
+		
+		JPanel panel_dottedprocess = new JPanel();
+		tabbedPane1.addTab("Dotted", null, panel_dottedprocess, null);
+		
+		JPanel panel_contrastprocess = new JPanel();
+		tabbedPane1.addTab("Contrast", null, panel_contrastprocess, null);
+		
+		JPanel panel_geometric = new JPanel();
+		tabbedPane1.addTab("Geometric", null, panel_geometric, null);
+		
+		JTabbedPane tabbedPane2 = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane2.setBackground(Color.WHITE);
+		tabbedPane2.setBounds(10, 350, 335, 331);
+		panel_image_processes.add(tabbedPane2);
+		
+		JPanel panel_low_filter = new JPanel();
+		panel_low_filter.setBackground(SystemColor.activeCaption);
+		tabbedPane2.addTab("Low Filter", null, panel_low_filter, null);
+		
+		JPanel panel_high_filter = new JPanel();
+		panel_high_filter.setBackground(SystemColor.info);
+		tabbedPane2.addTab("High Filter", null, panel_high_filter, null);
+		
+		JPanel panel_morphology = new JPanel();
+		tabbedPane2.addTab("Morphology", null, panel_morphology, null);
+		
+		JPanel panel_extras = new JPanel();
+		tabbedPane2.addTab("Extras", null, panel_extras, null);
 			
 		
 		////////////////////////////////////////
