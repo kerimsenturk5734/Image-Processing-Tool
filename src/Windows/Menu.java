@@ -45,6 +45,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.SpinnerModel;
 import javax.swing.JSlider;
 import javax.swing.JComboBox;
+import javax.swing.SwingConstants;
 
 public class Menu {
 
@@ -86,7 +87,7 @@ public class Menu {
 		
 		//......................MAIN-PANEL.....................
 		JPanel panel = new JPanel();
-		panel.setBackground(SystemColor.controlShadow);
+		panel.setBackground(SystemColor.textInactiveText);
 		panel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
 		panel.setLayout(null);
@@ -94,28 +95,30 @@ public class Menu {
 			//......................IMAGE-PANEL.....................
 			panel_images = new JPanel();
 			panel_images.setName("");
-			panel_images.setBackground(SystemColor.controlDkShadow);
-			panel_images.setBorder(new LineBorder(new Color(0, 0, 0)));
+			panel_images.setBackground(SystemColor.desktop);
+			panel_images.setBorder(new LineBorder(new Color(153, 180, 209), 3, true));
 			panel_images.setBounds(10, 25, 1050, 525);
 			panel.add(panel_images);
 			panel_images.setLayout(null);
 			
 			
 			JLabel lbl_img1 = new JLabel();
+			lbl_img1.setBorder(new LineBorder(SystemColor.activeCaption, 2, true));
 			lbl_img1.setBackground(Color.BLACK);
-			lbl_img1.setBounds(29, 6, 512, 512);
+			lbl_img1.setBounds(29, 25, 512, 512);
 			panel_images.add(lbl_img1);
 			
 			JLabel lbl_img2 = new JLabel();
+			lbl_img2.setBorder(new LineBorder(SystemColor.activeCaption, 2));
 			lbl_img2.setBackground(Color.BLACK);
-			lbl_img2.setBounds(536, 6, 512, 512);
+			lbl_img2.setBounds(536, 25, 512, 512);
 			panel_images.add(lbl_img2);
 
 		
 			//......................IMAGE-ACTION-PANEL.....................
 			JPanel panel_image_actions = new JPanel();
-			panel_image_actions.setBackground(SystemColor.controlDkShadow);
-			panel_image_actions.setBorder(new CompoundBorder(new CompoundBorder(new LineBorder(new Color(255, 255, 255)), new LineBorder(new Color(0, 0, 0))), null));
+			panel_image_actions.setBackground(SystemColor.controlShadow);
+			panel_image_actions.setBorder(new LineBorder(SystemColor.activeCaption, 3, true));
 			panel_image_actions.setBounds(10, 570, 1050, 146);
 			panel.add(panel_image_actions);
 			panel_image_actions.setLayout(null);
@@ -450,56 +453,186 @@ public class Menu {
 				tabbedPane2.addTab("Morphology", null, panel_morphology, null);
 				panel_morphology.setLayout(null);
 				
-				JPanel panel_dilate = new JPanel();
-				panel_dilate.setLayout(null);
-				panel_dilate.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-				panel_dilate.setBounds(8, 10, 314, 55);
-				panel_morphology.add(panel_dilate);
-				
-				JRadioButton rd_btn_dilate = new JRadioButton("Dilation");
-				rdbGroup.add(rd_btn_dilate);
-				rd_btn_dilate.setBounds(20, 15, 150, 21);
-				panel_dilate.add(rd_btn_dilate);
-				
-				JPanel panel_erode = new JPanel();
-				panel_erode.setLayout(null);
-				panel_erode.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-				panel_erode.setBounds(8, 83, 314, 60);
-				panel_morphology.add(panel_erode);
-				
-				JRadioButton rd_btn_eroding = new JRadioButton("Eroding");
-				rdbGroup.add(rd_btn_eroding);
-				rd_btn_eroding.setBounds(20, 15, 101, 21);
-				panel_erode.add(rd_btn_eroding);
-				
-				JPanel panel_open = new JPanel();
-				panel_open.setLayout(null);
-				panel_open.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-				panel_open.setBounds(8, 156, 314, 55);
-				panel_morphology.add(panel_open);
-				
-				JRadioButton rd_btn_opening = new JRadioButton("Open");
-				rdbGroup.add(rd_btn_opening);
-				rd_btn_opening.setBounds(20, 15, 150, 21);
-				panel_open.add(rd_btn_opening);
-				
-				JPanel panel_close = new JPanel();
-				panel_close.setLayout(null);
-				panel_close.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-				panel_close.setBounds(8, 229, 314, 55);
-				panel_morphology.add(panel_close);
-				
-				JRadioButton rd_btn_closing = new JRadioButton("Close");
-				rdbGroup.add(rd_btn_closing);
-				rd_btn_closing.setBounds(20, 15, 150, 21);
-				panel_close.add(rd_btn_closing);
+					//.....................DILATE.........................
+					JPanel panel_dilate = new JPanel();
+					panel_dilate.setLayout(null);
+					panel_dilate.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+					panel_dilate.setBounds(8, 10, 314, 55);
+					panel_morphology.add(panel_dilate);
+					
+						JRadioButton rd_btn_dilate = new JRadioButton("Dilation");
+						rdbGroup.add(rd_btn_dilate);
+						rd_btn_dilate.setBounds(20, 15, 150, 21);
+						panel_dilate.add(rd_btn_dilate);
+					
+					//.....................ERODE.........................
+					JPanel panel_erode = new JPanel();
+					panel_erode.setLayout(null);
+					panel_erode.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+					panel_erode.setBounds(8, 83, 314, 60);
+					panel_morphology.add(panel_erode);
+					
+						JRadioButton rd_btn_eroding = new JRadioButton("Eroding");
+						rdbGroup.add(rd_btn_eroding);
+						rd_btn_eroding.setBounds(20, 15, 101, 21);
+						panel_erode.add(rd_btn_eroding);
+					
+					//.....................OPEN.........................
+					JPanel panel_open = new JPanel();
+					panel_open.setLayout(null);
+					panel_open.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+					panel_open.setBounds(8, 156, 314, 55);
+					panel_morphology.add(panel_open);
+					
+						JRadioButton rd_btn_opening = new JRadioButton("Open");
+						rdbGroup.add(rd_btn_opening);
+						rd_btn_opening.setBounds(20, 15, 150, 21);
+						panel_open.add(rd_btn_opening);
+					
+					//.....................CLOSE.........................
+					JPanel panel_close = new JPanel();
+					panel_close.setLayout(null);
+					panel_close.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+					panel_close.setBounds(8, 229, 314, 55);
+					panel_morphology.add(panel_close);
+					
+						JRadioButton rd_btn_closing = new JRadioButton("Close");
+						rdbGroup.add(rd_btn_closing);
+						rd_btn_closing.setBounds(20, 15, 150, 21);
+						panel_close.add(rd_btn_closing);
 				
 				//......................EXTRAS........................
 				JPanel panel_extras = new JPanel();
 				panel_extras.setBackground(SystemColor.controlShadow);
 				tabbedPane2.addTab("Extras", null, panel_extras, null);
 				panel_extras.setLayout(null);
-				
+					
+					//.....................PERSPECTIVE-TRANSFORM.........................
+					JPanel panel_perspectivetransform = new JPanel();
+					panel_perspectivetransform.setLayout(null);
+					panel_perspectivetransform.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+					panel_perspectivetransform.setBounds(8, 10, 314, 219);
+					panel_extras.add(panel_perspectivetransform);
+					
+						JRadioButton rd_btn_perspectivetransform = new JRadioButton("Perspective Transform");
+						rdbGroup.add(rd_btn_perspectivetransform);
+						rd_btn_perspectivetransform.setBounds(20, 15, 166, 21);
+						panel_perspectivetransform.add(rd_btn_perspectivetransform);
+						
+						JLabel lbl_xy1 = new JLabel("x1:                 y1:");
+						lbl_xy1.setBackground(Color.YELLOW);
+						lbl_xy1.setBounds(23, 40, 99, 13);
+						panel_perspectivetransform.add(lbl_xy1);
+						
+						JSpinner spn_x1 = new JSpinner(new SpinnerNumberModel());
+						spn_x1.setBounds(8, 55, 60, 20);
+						panel_perspectivetransform.add(spn_x1);
+						
+						JSpinner spn_y1 = new JSpinner(new SpinnerNumberModel());
+						spn_y1.setBounds(75, 55, 60, 20);
+						panel_perspectivetransform.add(spn_y1);
+
+						JLabel lbl_xy2 = new JLabel("x2:                 y2:");
+						lbl_xy2.setBounds(23, 85, 99, 13);
+						panel_perspectivetransform.add(lbl_xy2);
+						
+						JSpinner spn_x2 = new JSpinner(new SpinnerNumberModel());
+						spn_x2.setBounds(8, 100, 60, 20);
+						panel_perspectivetransform.add(spn_x2);
+						
+						JSpinner spn_y2 = new JSpinner(new SpinnerNumberModel());
+						spn_y2.setBounds(75, 100, 60, 20);
+						panel_perspectivetransform.add(spn_y2);
+						
+						JLabel lbl_xy3 = new JLabel("x3:                 y3:");
+						lbl_xy3.setBounds(23, 130, 99, 13);
+						panel_perspectivetransform.add(lbl_xy3);
+						
+						JSpinner spn_x3 = new JSpinner(new SpinnerNumberModel());
+						spn_x3.setBounds(8, 145, 60, 20);
+						panel_perspectivetransform.add(spn_x3);
+						
+						JSpinner spn_y3 = new JSpinner(new SpinnerNumberModel());
+						spn_y3.setBounds(75, 145, 60, 20);
+						panel_perspectivetransform.add(spn_y3);
+						
+						JLabel lbl_xy4 = new JLabel("x4:                 y4:");
+						lbl_xy4.setBounds(23, 174, 99, 13);
+						panel_perspectivetransform.add(lbl_xy4);
+						
+						JSpinner spn_x4 = new JSpinner(new SpinnerNumberModel());
+						spn_x4.setBounds(8, 189, 60, 20);
+						panel_perspectivetransform.add(spn_x4);
+						
+						JSpinner spn_y4 = new JSpinner(new SpinnerNumberModel());
+						spn_y4.setBounds(75, 189, 60, 20);
+						panel_perspectivetransform.add(spn_y4);
+						
+						JLabel lbl_XY1 = new JLabel("X1':                 Y1':");
+						lbl_XY1.setBounds(194, 40, 99, 13);
+						panel_perspectivetransform.add(lbl_XY1);
+						
+						JSpinner spn_X1 = new JSpinner(new SpinnerNumberModel());
+						spn_X1.setBounds(179, 55, 60, 20);
+						panel_perspectivetransform.add(spn_X1);
+						
+						JSpinner spn_Y1 = new JSpinner(new SpinnerNumberModel());
+						spn_Y1.setBounds(246, 55, 60, 20);
+						panel_perspectivetransform.add(spn_Y1);
+						
+						JLabel lbl_XY2 = new JLabel("X2':                Y2':");
+						lbl_XY2.setBounds(194, 85, 99, 13);
+						panel_perspectivetransform.add(lbl_XY2);
+						
+						JSpinner spn_X2 = new JSpinner(new SpinnerNumberModel());
+						spn_X2.setBounds(179, 100, 60, 20);
+						panel_perspectivetransform.add(spn_X2);
+						
+						JSpinner spn_Y2 = new JSpinner(new SpinnerNumberModel());
+						spn_Y2.setBounds(246, 100, 60, 20);
+						panel_perspectivetransform.add(spn_Y2);
+						
+						JLabel lbl_XY3 = new JLabel("X3':                 Y3':");
+						lbl_XY3.setBounds(194, 130, 99, 13);
+						panel_perspectivetransform.add(lbl_XY3);
+						
+						JSpinner spn_X3 = new JSpinner(new SpinnerNumberModel());
+						spn_X3.setBounds(179, 145, 60, 20);
+						panel_perspectivetransform.add(spn_X3);
+						
+						JSpinner spn_Y3 = new JSpinner(new SpinnerNumberModel());
+						spn_Y3.setBounds(246, 145, 60, 20);
+						panel_perspectivetransform.add(spn_Y3);
+						
+						JLabel lbl_XY4 = new JLabel("X4':                 X4':");
+						lbl_XY4.setBounds(194, 174, 99, 13);
+						panel_perspectivetransform.add(lbl_XY4);
+						
+						JSpinner spn_X4 = new JSpinner(new SpinnerNumberModel());
+						spn_X4.setBounds(179, 189, 60, 20);
+						panel_perspectivetransform.add(spn_X4);
+												
+						JSpinner spn_Y4 = new JSpinner(new SpinnerNumberModel());
+						spn_Y4.setBounds(246, 189, 60, 20);
+						panel_perspectivetransform.add(spn_Y4);
+						
+						JLabel lblNewLabel = new JLabel("");
+						lblNewLabel.setBackground(Color.RED);
+						lblNewLabel.setBounds(153, 61, 11, 151);
+						panel_perspectivetransform.add(lblNewLabel);
+					
+					//.....................SHARPENING-BY-CONVOLUTION.........................
+					JPanel panel_sharpeningbyconv = new JPanel();
+					panel_sharpeningbyconv.setLayout(null);
+					panel_sharpeningbyconv.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+					panel_sharpeningbyconv.setBounds(8, 239, 314, 55);
+					panel_extras.add(panel_sharpeningbyconv);
+					
+					JRadioButton rd_btn_sharpeningbyconv = new JRadioButton("Sharpening by Convolution");
+					rdbGroup.add(rd_btn_sharpeningbyconv);
+					rd_btn_sharpeningbyconv.setBounds(20, 15, 210, 21);
+					panel_sharpeningbyconv.add(rd_btn_sharpeningbyconv);
+					
 			
 			////////////////////////////////////////
 			
@@ -527,6 +660,7 @@ public class Menu {
 		
 		createHistogram(getPixelValues(getGrayValues(imgOriginal)),"Orijinal");
 		lbl_img1.setIcon(new ImageIcon(imgOriginal));
+		lbl_img1.setBounds(lbl_img1.getBounds().x, lbl_img1.getBounds().y, imgOriginal.getWidth(), imgOriginal.getHeight());
 		
 		
 		//////ÝÞLENMÝÞ///////
@@ -536,6 +670,7 @@ public class Menu {
 		
 		createHistogram(getPixelValues(getGrayValues(img)),"Ýþlenmiþ");
 		lbl_img2.setIcon(new ImageIcon(img));
+		lbl_img2.setBounds(lbl_img2.getBounds().x, lbl_img2.getBounds().y, img.getWidth(), img.getHeight());
 
 		//System.out.println(imgBufferedImage.getRGB(20, 20));
 	}
