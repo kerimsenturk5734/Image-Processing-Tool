@@ -450,6 +450,50 @@ public class Menu {
 				tabbedPane2.addTab("Morphology", null, panel_morphology, null);
 				panel_morphology.setLayout(null);
 				
+				JPanel panel_dilate = new JPanel();
+				panel_dilate.setLayout(null);
+				panel_dilate.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+				panel_dilate.setBounds(8, 10, 314, 55);
+				panel_morphology.add(panel_dilate);
+				
+				JRadioButton rd_btn_dilate = new JRadioButton("Dilation");
+				rdbGroup.add(rd_btn_dilate);
+				rd_btn_dilate.setBounds(20, 15, 150, 21);
+				panel_dilate.add(rd_btn_dilate);
+				
+				JPanel panel_erode = new JPanel();
+				panel_erode.setLayout(null);
+				panel_erode.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+				panel_erode.setBounds(8, 83, 314, 60);
+				panel_morphology.add(panel_erode);
+				
+				JRadioButton rd_btn_eroding = new JRadioButton("Eroding");
+				rdbGroup.add(rd_btn_eroding);
+				rd_btn_eroding.setBounds(20, 15, 101, 21);
+				panel_erode.add(rd_btn_eroding);
+				
+				JPanel panel_open = new JPanel();
+				panel_open.setLayout(null);
+				panel_open.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+				panel_open.setBounds(8, 156, 314, 55);
+				panel_morphology.add(panel_open);
+				
+				JRadioButton rd_btn_opening = new JRadioButton("Open");
+				rdbGroup.add(rd_btn_opening);
+				rd_btn_opening.setBounds(20, 15, 150, 21);
+				panel_open.add(rd_btn_opening);
+				
+				JPanel panel_close = new JPanel();
+				panel_close.setLayout(null);
+				panel_close.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+				panel_close.setBounds(8, 229, 314, 55);
+				panel_morphology.add(panel_close);
+				
+				JRadioButton rd_btn_closing = new JRadioButton("Close");
+				rdbGroup.add(rd_btn_closing);
+				rd_btn_closing.setBounds(20, 15, 150, 21);
+				panel_close.add(rd_btn_closing);
+				
 				//......................EXTRAS........................
 				JPanel panel_extras = new JPanel();
 				panel_extras.setBackground(SystemColor.controlShadow);
