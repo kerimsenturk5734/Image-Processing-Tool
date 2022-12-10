@@ -44,6 +44,7 @@ import javax.swing.JRadioButton;
 import javax.swing.border.TitledBorder;
 import javax.swing.SpinnerModel;
 import javax.swing.JSlider;
+import javax.swing.JComboBox;
 
 public class Menu {
 
@@ -391,31 +392,69 @@ public class Menu {
 					panel_scale.add(rd_btn_zoomout);
 			
 					
-			//......................PANE-1........................
+			//......................PANE-2........................
 			JTabbedPane tabbedPane2 = new JTabbedPane(JTabbedPane.TOP);
 			tabbedPane2.setBackground(Color.WHITE);
 			tabbedPane2.setBounds(10, 350, 335, 331);
 			panel_image_processes.add(tabbedPane2);
-			
-			JPanel panel_low_filter = new JPanel();
-			panel_low_filter.setBackground(SystemColor.controlShadow);
-			tabbedPane2.addTab("Low Filter", null, panel_low_filter, null);
-			panel_low_filter.setLayout(null);
-			
-			JPanel panel_high_filter = new JPanel();
-			panel_high_filter.setBackground(SystemColor.controlShadow);
-			tabbedPane2.addTab("High Filter", null, panel_high_filter, null);
-			panel_high_filter.setLayout(null);
-			
-			JPanel panel_morphology = new JPanel();
-			panel_morphology.setBackground(SystemColor.controlShadow);
-			tabbedPane2.addTab("Morphology", null, panel_morphology, null);
-			panel_morphology.setLayout(null);
-			
-			JPanel panel_extras = new JPanel();
-			panel_extras.setBackground(SystemColor.controlShadow);
-			tabbedPane2.addTab("Extras", null, panel_extras, null);
-			panel_extras.setLayout(null);
+				
+				//......................FILTERS........................
+				JPanel panel_filters = new JPanel();
+				panel_filters.setBackground(SystemColor.controlShadow);
+				tabbedPane2.addTab("Filters", null, panel_filters, null);
+				panel_filters.setLayout(null);
+				
+					//......................LOW-FILTERS........................
+					JPanel panel_lowfilter = new JPanel();
+					panel_lowfilter.setLayout(null);
+					panel_lowfilter.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+					panel_lowfilter.setBounds(8, 60, 314, 60);
+					panel_filters.add(panel_lowfilter);
+					
+						JRadioButton rd_btn_lowfilter = new JRadioButton("Low Filters");
+						rdbGroup.add(rd_btn_lowfilter);
+						rd_btn_lowfilter.setBounds(20, 15, 95, 21);
+						panel_lowfilter.add(rd_btn_lowfilter);
+						
+						JComboBox<Object> cb_lowflter = new JComboBox<Object>();
+						cb_lowflter.setFont(new Font("Monospaced", Font.ITALIC, 15));
+						cb_lowflter.setBounds(130, 15, 168, 21);
+						cb_lowflter.addItem("GAUSS_FILTER");
+						cb_lowflter.addItem("MEAN_FILTER");
+						cb_lowflter.addItem("MEDIAN_FILTER");
+						panel_lowfilter.add(cb_lowflter);
+						
+					//......................HIGH-FILTERS........................
+					JPanel panel_highfilter = new JPanel();
+					panel_highfilter.setLayout(null);
+					panel_highfilter.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+					panel_highfilter.setBounds(8, 180, 314, 60);
+					panel_filters.add(panel_highfilter);
+					
+						JRadioButton rd_btn_highfilter = new JRadioButton("High Filters");
+						rdbGroup.add(rd_btn_highfilter);
+						rd_btn_highfilter.setBounds(20, 15, 96, 21);
+						panel_highfilter.add(rd_btn_highfilter);
+						
+						JComboBox<Object> cb_highfilter = new JComboBox<Object>();
+						cb_highfilter.setFont(new Font("Monospaced", Font.ITALIC, 15));
+						cb_highfilter.setBounds(130, 15, 168, 21);
+						cb_highfilter.addItem("LAPLACE_FILTER");
+						cb_highfilter.addItem("SOBEL_FILTER");
+						cb_highfilter.addItem("PREWITT_FILTER");
+						panel_highfilter.add(cb_highfilter);
+				
+				//......................MORPHOLOGY........................
+				JPanel panel_morphology = new JPanel();
+				panel_morphology.setBackground(SystemColor.controlShadow);
+				tabbedPane2.addTab("Morphology", null, panel_morphology, null);
+				panel_morphology.setLayout(null);
+				
+				//......................EXTRAS........................
+				JPanel panel_extras = new JPanel();
+				panel_extras.setBackground(SystemColor.controlShadow);
+				tabbedPane2.addTab("Extras", null, panel_extras, null);
+				panel_extras.setLayout(null);
 				
 			
 			////////////////////////////////////////
