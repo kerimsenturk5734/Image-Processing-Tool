@@ -1,5 +1,7 @@
 package Windows;
 import java.awt.EventQueue;
+import java.awt.FileDialog;
+
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import java.awt.image.BufferedImage;
@@ -33,6 +35,7 @@ import Filters.ImageFilters.Sharp;
 import Geometric.Geo;
 import Morphology.Morp;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
@@ -146,7 +149,7 @@ public class Menu {
 					if(img_in!=null)
 						createHistogram(img_in, "Orijinal");
 					else {
-						System.out.println("Please import an image.");
+						JOptionPane.showMessageDialog(null,"Please import an image.");
 					}
 				}
 			});
@@ -199,11 +202,8 @@ public class Menu {
 							}
 						}
 						else {
-							System.out.println("File not readable as image.");
+							JOptionPane.showMessageDialog(null,"File not readable as image.");
 						}						
-					}
-					else {
-						System.out.println("File not choosed.");
 					}
 					
 				}
@@ -215,6 +215,28 @@ public class Menu {
 			panel_image_actions.add(btn_import);
 			
 			JButton btn_saveas = new JButton("Save as...");
+			btn_saveas.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					
+					Image img = ((ImageIcon) lbl_img2.getIcon()).getImage();
+					BufferedImage bi = new BufferedImage(img.getWidth(null),img.getHeight(null),BufferedImage.TYPE_INT_RGB);
+
+					Graphics2D g2 = bi.createGraphics();
+					g2.drawImage(img, 0, 0, null);
+					g2.dispose();
+					
+					JFileChooser j=new JFileChooser();
+					int userSelection = j.showSaveDialog(frame);
+					if (userSelection == JFileChooser.APPROVE_OPTION) {
+					    try {
+							ImageIO.write(bi, "jpg", new File(j.getSelectedFile().getAbsolutePath()+".jpg"));
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+				}
+			});
 			btn_saveas.setBackground(SystemColor.textHighlight);
 			btn_saveas.setFont(new Font("Monospaced", Font.BOLD, 15));
 			btn_saveas.setBounds(657, 64, 199, 29);
