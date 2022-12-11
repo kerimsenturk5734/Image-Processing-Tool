@@ -19,6 +19,8 @@ import org.jfree.chart.ChartFrame;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.statistics.HistogramDataset;
+import org.jfree.ui.ExtensionFileFilter;
+
 import Filters.Filter;
 import Filters.FilterManager;
 import Filters.IFilterDao;
@@ -47,9 +49,13 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.JSpinner;
 import javax.swing.JRadioButton;
 import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 import javax.swing.SpinnerModel;
 import javax.swing.JSlider;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -115,13 +121,13 @@ public class Menu {
 			JLabel lbl_img1 = new JLabel();
 			lbl_img1.setBorder(new LineBorder(SystemColor.activeCaption, 2, true));
 			lbl_img1.setBackground(Color.BLACK);
-			lbl_img1.setBounds(29, 25, 512, 512);
+			lbl_img1.setBounds(29, 25, 474, 474);
 			panel_images.add(lbl_img1);
 			
 			JLabel lbl_img2 = new JLabel();
 			lbl_img2.setBorder(new LineBorder(SystemColor.activeCaption, 2));
 			lbl_img2.setBackground(Color.BLACK);
-			lbl_img2.setBounds(536, 25, 512, 512);
+			lbl_img2.setBounds(536, 25, 474, 474);
 			panel_images.add(lbl_img2);
 
 		
@@ -162,6 +168,46 @@ public class Menu {
 			panel_image_actions.add(btn_histogram_out);
 			
 			JButton btn_import = new JButton("Import Image");
+			btn_import.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					JFileChooser j = new JFileChooser(FileSystemView.getFileSystemView());
+					
+					// Get array of available formats
+					String[] suffices = ImageIO.getReaderFileSuffixes();
+
+					// Add a file filter for each one
+					for (int i = 0; i < suffices.length; i++) {
+					    FileFilter filter = new FileNameExtensionFilter(suffices[i] + " files", suffices[i]);
+					    j.addChoosableFileFilter(filter);
+					}
+
+					// Show dialog
+					j.setFileSelectionMode(JFileChooser.FILES_ONLY);
+					j.setAcceptAllFileFilterUsed(false);
+					int ret=j.showSaveDialog(null);
+					
+					
+					if(ret==0) {
+						
+						if(j.getSelectedFile().canRead()) {
+							//Then set img_in and label ico
+							try {
+								img_in=Geo.resizeImage(ImageIO.read(j.getSelectedFile()), 512, 512);
+								lbl_img1.setIcon(new ImageIcon(img_in));
+							} catch (IOException e1) {
+								e1.printStackTrace();
+							}
+						}
+						else {
+							System.out.println("File not readable as image.");
+						}						
+					}
+					else {
+						System.out.println("File not choosed.");
+					}
+					
+				}
+			});
 			btn_import.setForeground(Color.WHITE);
 			btn_import.setBackground(new Color(255, 0, 0));
 			btn_import.setFont(new Font("Monospaced", Font.BOLD, 15));
@@ -670,15 +716,7 @@ public class Menu {
 		
 		
 		////ORIJINAL/////		
-		try {
-			img_in = ImageIO.read(new File("Images/lenna.jpg"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
-		lbl_img1.setIcon(new ImageIcon(img_in));
-		lbl_img1.setBounds(lbl_img1.getBounds().x, lbl_img1.getBounds().y, img_in.getWidth(), img_in.getHeight());
 		
 		
 		
