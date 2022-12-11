@@ -11,6 +11,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.JPanel;
 import javax.swing.ButtonGroup;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import org.jfree.chart.ChartFactory;
@@ -34,6 +35,10 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+
 import javax.swing.border.CompoundBorder;
 import java.awt.SystemColor;
 import javax.swing.SpinnerNumberModel;
@@ -46,13 +51,18 @@ import javax.swing.SpinnerModel;
 import javax.swing.JSlider;
 import javax.swing.JComboBox;
 import javax.swing.SwingConstants;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.awt.event.ActionEvent;
 
 public class Menu {
 
 	private JFrame frame;
 	private JPanel panel_images;
 	private ButtonGroup rdbGroup;
-
+	private BufferedImage img_in;
+	private BufferedImage img_out;
 	/**
 	 * Launch the application.
 	 */
@@ -124,12 +134,28 @@ public class Menu {
 			panel_image_actions.setLayout(null);
 			
 			JButton btn_histogram_in = new JButton("Histogram");
+			btn_histogram_in.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					
+					if(img_in!=null)
+						createHistogram(img_in, "Orijinal");
+					else {
+						System.out.println("Please import an image.");
+					}
+				}
+			});
 			btn_histogram_in.setBackground(new Color(255, 239, 213));
 			btn_histogram_in.setFont(new Font("Monospaced", Font.BOLD, 15));
 			btn_histogram_in.setBounds(159, 25, 199, 29);
 			panel_image_actions.add(btn_histogram_in);
 			
 			JButton btn_histogram_out = new JButton("Histogram");
+			btn_histogram_out.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if(img_out!=null)
+						createHistogram(img_out, "Ýþlenmiþ");
+				}
+			});
 			btn_histogram_out.setBackground(new Color(255, 239, 213));
 			btn_histogram_out.setFont(new Font("Monospaced", Font.BOLD, 15));
 			btn_histogram_out.setBounds(657, 25, 199, 29);
@@ -641,34 +667,33 @@ public class Menu {
 		
 		
 		//////////RUNTIME///////////////////////
-		BufferedImage imgBufferedImage=null;
-		try {
-			imgBufferedImage = ImageIO.read(new File("Images/lenna.jpg"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		
 		////ORIJINAL/////		
-		BufferedImage imgOriginal=null;
 		try {
-			imgOriginal = ImageIO.read(new File("Images/lenna.jpg"));
+			img_in = ImageIO.read(new File("Images/lenna.jpg"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		createHistogram(getPixelValues(getGrayValues(imgOriginal)),"Orijinal");
-		lbl_img1.setIcon(new ImageIcon(imgOriginal));
-		lbl_img1.setBounds(lbl_img1.getBounds().x, lbl_img1.getBounds().y, imgOriginal.getWidth(), imgOriginal.getHeight());
+		lbl_img1.setIcon(new ImageIcon(img_in));
+		lbl_img1.setBounds(lbl_img1.getBounds().x, lbl_img1.getBounds().y, img_in.getWidth(), img_in.getHeight());
+		
 		
 		
 		//////ÝÞLENMÝÞ///////
+		try {
+			img_out = ImageIO.read(new File("Images/lenna.jpg"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		int[][] mask=new int[][] {{1,1,1},{1,-4,1},{0,1,0}};
 		FilterManager filter=new FilterManager(new Sharp(Sharp.DEFAULT_KERNEL));
-		BufferedImage img=filter.applyFilter(imgBufferedImage);
+		BufferedImage img=filter.applyFilter(img_out);
 		
-		createHistogram(getPixelValues(getGrayValues(img)),"Ýþlenmiþ");
 		lbl_img2.setIcon(new ImageIcon(img));
 		lbl_img2.setBounds(lbl_img2.getBounds().x, lbl_img2.getBounds().y, img.getWidth(), img.getHeight());
 
@@ -841,11 +866,12 @@ public class Menu {
 		return nImg;
 	}
 	
-	public void createHistogram(double[] pixelValues,String histName) {
+	public void createHistogram(BufferedImage img,String histName) {
 		
 		HistogramDataset histogramDataset = new HistogramDataset();
-	
-		histogramDataset.addSeries("H1", pixelValues, 255, 0.0, 255);
+		
+		double[] pixelValues=getPixelValues(getGrayValues(img));
+		histogramDataset.addSeries(histName, pixelValues, 255, 0.0, 255);
 		
 		//Title and axis names
 		String plotTitle = histName; 
@@ -855,9 +881,9 @@ public class Menu {
 	    PlotOrientation orientation = PlotOrientation.VERTICAL; 
 	    
 	    //Chart preferences
-	    boolean show = false; 
-	    boolean toolTips = false;
-	    boolean urls = false; 
+	    boolean show = true; 
+	    boolean toolTips = true;
+	    boolean urls = true; 
 	     
 	    //Chart creating with settings
 	    JFreeChart chart = ChartFactory.createHistogram( plotTitle, xaxis, yaxis, 
@@ -865,8 +891,50 @@ public class Menu {
 		
 	    //Chartframe settings
 	    ChartFrame frame=new ChartFrame(histName, chart);
-	    frame.setSize(600, 500);
+	    frame.setBounds(100,100,600,500);
 	    frame.setVisible(true);
+	    frame.addWindowListener(new WindowListener() {
+			
+			@Override
+			public void windowOpened(WindowEvent e) {
+				Menu.this.frame.setEnabled(false);
+			}
+			
+			@Override
+			public void windowIconified(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowDeiconified(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowDeactivated(WindowEvent e) {
+				// TODO Auto-generated method stub
+			}
+			
+			@Override
+			public void windowClosing(WindowEvent e) {
+				// TODO Auto-generated method 
+				Menu.this.frame.setEnabled(true);		
+			}
+			
+			@Override
+			public void windowClosed(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowActivated(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});;
 	}
 
 	
@@ -932,4 +1000,5 @@ public class Menu {
  		
  		return img;
  	}
+
 }
