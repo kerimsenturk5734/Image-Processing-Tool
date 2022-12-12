@@ -78,6 +78,35 @@ public class Menu {
 	private BufferedImage img_in;
 	private BufferedImage img_out;
 	private int serviceNumber=-1;
+	
+	
+	//............Components............
+	JSlider slider_brightness;
+	JSpinner spn_threshold;
+	JSlider slider_contrast;
+	JSpinner spn_lowbound;
+	JSpinner spn_upbound;
+	JSpinner spn_offsetX;
+	JSpinner spn_offsetY;
+	JSpinner spn_angle;
+	JSpinner spn_x1;
+	JSpinner spn_y1;
+	JSpinner spn_x2;
+	JSpinner spn_y2;
+	JSpinner spn_x3;
+	JSpinner spn_y3;
+	JSpinner spn_x4;
+	JSpinner spn_y4;
+	JSpinner spn_X1;
+	JSpinner spn_Y1;
+	JSpinner spn_X2;
+	JSpinner spn_Y2;
+	JSpinner spn_X3;
+	JSpinner spn_Y3;
+	JSpinner spn_X4;
+	JSpinner spn_Y4;
+	
+	
 	/**
 	 * Launch the application.
 	 */
@@ -310,7 +339,7 @@ public class Menu {
 				panel_setbrightness.setBounds(8, 93, 314, 60);
 				panel_dottedprocess.add(panel_setbrightness);
 				
-				JSlider slider_brightness = new JSlider();
+				slider_brightness = new JSlider();
 				slider_brightness.setEnabled(false);
 				slider_brightness.setValue(0);
 				slider_brightness.setMinimum(-128);
@@ -351,7 +380,7 @@ public class Menu {
 				panel_threshold.setBounds(8, 166, 314, 55);
 				panel_dottedprocess.add(panel_threshold);
 				
-				JSpinner spn_threshold = new JSpinner(new SpinnerNumberModel(0,0,255,1));
+				spn_threshold = new JSpinner(new SpinnerNumberModel(0,0,255,1));
 				spn_threshold.setEnabled(false);
 				spn_threshold.setBounds(240, 16, 66, 28);
 				panel_threshold.add(spn_threshold);
@@ -403,7 +432,7 @@ public class Menu {
 				panel_setcontrast.setBounds(8, 20, 314, 60);
 				panel_contrastprocess.add(panel_setcontrast);
 				
-					JSlider slider_contrast = new JSlider();
+					slider_contrast = new JSlider();
 					slider_contrast.setEnabled(false);
 					slider_contrast.setValue(0);
 					slider_contrast.setPaintLabels(true);
@@ -436,12 +465,12 @@ public class Menu {
 				panel_stretchsontrast.setBounds(8, 93, 314, 75);
 				panel_contrastprocess.add(panel_stretchsontrast);
 				
-					JSpinner spn_lowbound = new JSpinner(new SpinnerNumberModel(0,0,255,1));
+					spn_lowbound = new JSpinner(new SpinnerNumberModel(0,0,255,1));
 					spn_lowbound.setEnabled(false);
 					spn_lowbound.setBounds(240, 28, 66, 28);
 					panel_stretchsontrast.add(spn_lowbound);
 					
-					JSpinner spn_upbound = new JSpinner(new SpinnerNumberModel(0,0,255,1));
+					spn_upbound = new JSpinner(new SpinnerNumberModel(0,0,255,1));
 					spn_upbound.setEnabled(false);
 					spn_upbound.setBounds(162, 28, 66, 28);
 					panel_stretchsontrast.add(spn_upbound);
@@ -527,12 +556,12 @@ public class Menu {
 				panel_geometric.add(panel_offset);
 				
 
-					JSpinner spn_offsetY = new JSpinner(new SpinnerNumberModel());
+					spn_offsetY = new JSpinner(new SpinnerNumberModel());
 					spn_offsetY.setEnabled(false);
 					spn_offsetY.setBounds(240, 22, 66, 28);
 					panel_offset.add(spn_offsetY);
 					
-					JSpinner spn_offsetX = new JSpinner(new SpinnerNumberModel());
+					spn_offsetX = new JSpinner(new SpinnerNumberModel());
 					spn_offsetX.setEnabled(false);
 					spn_offsetX.setBounds(160, 22, 66, 28);
 					panel_offset.add(spn_offsetX);
@@ -564,7 +593,7 @@ public class Menu {
 				panel_rotate.setBounds(8, 156, 314, 55);
 				panel_geometric.add(panel_rotate);
 				
-					JSpinner spn_angle = new JSpinner(new SpinnerNumberModel());
+					spn_angle = new JSpinner(new SpinnerNumberModel());
 					spn_angle.setEnabled(false);
 					spn_angle.setBounds(240, 16, 66, 28);
 					panel_rotate.add(spn_angle);
@@ -831,11 +860,11 @@ public class Menu {
 							lbl_xy1.setBounds(15, 0, 99, 13);
 							panel_coordinates.add(lbl_xy1);
 							
-							JSpinner spn_x1 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
+							spn_x1 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
 							spn_x1.setBounds(0, 15, 60, 20);
 							panel_coordinates.add(spn_x1);
 							
-							JSpinner spn_y1 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
+							spn_y1 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
 							spn_y1.setBounds(67, 15, 60, 20);
 							panel_coordinates.add(spn_y1);
 							
@@ -843,11 +872,11 @@ public class Menu {
 							lbl_xy2.setBounds(15, 45, 99, 13);
 							panel_coordinates.add(lbl_xy2);
 							
-							JSpinner spn_x2 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
+							spn_x2 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
 							spn_x2.setBounds(0, 60, 60, 20);
 							panel_coordinates.add(spn_x2);
 							
-							JSpinner spn_y2 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
+							spn_y2 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
 							spn_y2.setBounds(67, 60, 60, 20);
 							panel_coordinates.add(spn_y2);
 							
@@ -855,11 +884,11 @@ public class Menu {
 							lbl_xy3.setBounds(15, 90, 99, 13);
 							panel_coordinates.add(lbl_xy3);
 							
-							JSpinner spn_x3 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
+							spn_x3 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
 							spn_x3.setBounds(0, 105, 60, 20);
 							panel_coordinates.add(spn_x3);
 							
-							JSpinner spn_y3 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
+							spn_y3 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
 							spn_y3.setBounds(67, 105, 60, 20);
 							panel_coordinates.add(spn_y3);
 							
@@ -867,11 +896,11 @@ public class Menu {
 							lbl_xy4.setBounds(15, 134, 99, 13);
 							panel_coordinates.add(lbl_xy4);
 							
-							JSpinner spn_x4 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
+							spn_x4 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
 							spn_x4.setBounds(0, 149, 60, 20);
 							panel_coordinates.add(spn_x4);							
 							
-							JSpinner spn_y4 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
+							spn_y4 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
 							spn_y4.setBounds(67, 149, 60, 20);
 							panel_coordinates.add(spn_y4);
 							
@@ -879,11 +908,11 @@ public class Menu {
 							lbl_XY1.setBounds(186, 0, 99, 13);
 							panel_coordinates.add(lbl_XY1);
 							
-							JSpinner spn_X1 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
+							spn_X1 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
 							spn_X1.setBounds(171, 15, 60, 20);
 							panel_coordinates.add(spn_X1);
 							
-							JSpinner spn_Y1 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
+							spn_Y1 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
 							spn_Y1.setBounds(238, 15, 60, 20);
 							panel_coordinates.add(spn_Y1);
 							
@@ -891,11 +920,11 @@ public class Menu {
 							lbl_XY2.setBounds(186, 45, 99, 13);
 							panel_coordinates.add(lbl_XY2);
 							
-							JSpinner spn_X2 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
+							spn_X2 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
 							spn_X2.setBounds(171, 60, 60, 20);
 							panel_coordinates.add(spn_X2);
 	
-							JSpinner spn_Y2 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
+							spn_Y2 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
 							spn_Y2.setBounds(238, 60, 60, 20);
 							panel_coordinates.add(spn_Y2);
 							
@@ -903,11 +932,11 @@ public class Menu {
 							lbl_XY3.setBounds(186, 90, 99, 13);
 							panel_coordinates.add(lbl_XY3);
 							
-							JSpinner spn_X3 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
+							spn_X3 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
 							spn_X3.setBounds(171, 105, 60, 20);
 							panel_coordinates.add(spn_X3);
 
-							JSpinner spn_Y3 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
+							spn_Y3 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
 							spn_Y3.setBounds(238, 105, 60, 20);
 							panel_coordinates.add(spn_Y3);
 							
@@ -915,11 +944,11 @@ public class Menu {
 							lbl_XY4.setBounds(186, 134, 99, 13);
 							panel_coordinates.add(lbl_XY4);
 							
-							JSpinner spn_Y4 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
+							spn_Y4 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
 							spn_Y4.setBounds(238, 149, 60, 20);
 							panel_coordinates.add(spn_Y4);
 							
-							JSpinner spn_X4 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
+							spn_X4 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
 							spn_X4.setBounds(171, 149, 60, 20);
 							panel_coordinates.add(spn_X4);
 							
@@ -934,6 +963,12 @@ public class Menu {
 					panel_extras.add(panel_sharpeningbyconv);
 					
 					JRadioButton rd_btn_sharpeningbyconv = new JRadioButton("Sharpening by Convolution");
+					rd_btn_sharpeningbyconv.addChangeListener(new ChangeListener() {
+						public void stateChanged(ChangeEvent e) {
+							if(rd_btn_sharpeningbyconv.isSelected())
+								serviceNumber=23;
+						}
+					});
 					rdbGroup.add(rd_btn_sharpeningbyconv);
 					rd_btn_sharpeningbyconv.setBounds(20, 15, 210, 21);
 					panel_sharpeningbyconv.add(rd_btn_sharpeningbyconv);
@@ -1324,6 +1359,30 @@ public class Menu {
 
 			}
 			case 15: {
+
+			}
+			case 16: {
+
+			}
+			case 17: {
+
+			}
+			case 18: {
+
+			}
+			case 19: {
+
+			}
+			case 20: {
+
+			}
+			case 21: {
+
+			}
+			case 22: {
+
+			}
+			case 23: {
 
 			}
 			
