@@ -85,8 +85,8 @@ public class Menu {
 	JSlider slider_brightness;
 	JSpinner spn_threshold;
 	JSlider slider_contrast;
-	JSpinner spn_lowbound;
 	JSpinner spn_upbound;
+	JSpinner spn_eqFactor;
 	JSpinner spn_offsetX;
 	JSpinner spn_offsetY;
 	JSpinner spn_angle;
@@ -108,7 +108,8 @@ public class Menu {
 	JSpinner spn_Y4;
 	JLabel lbl_img_in;
 	JLabel lbl_img_out;
-	
+	JComboBox<Object> cb_lowflter;
+	JComboBox<Object> cb_highfilter;
 	
 	/**
 	 * Launch the application.
@@ -469,20 +470,15 @@ public class Menu {
 				panel_stretchsontrast.setBounds(8, 93, 314, 75);
 				panel_contrastprocess.add(panel_stretchsontrast);
 				
-					spn_lowbound = new JSpinner(new SpinnerNumberModel(0,0,255,1));
-					spn_lowbound.setEnabled(false);
-					spn_lowbound.setBounds(240, 28, 66, 28);
-					panel_stretchsontrast.add(spn_lowbound);
-					
 					spn_upbound = new JSpinner(new SpinnerNumberModel(0,0,255,1));
 					spn_upbound.setEnabled(false);
-					spn_upbound.setBounds(162, 28, 66, 28);
+					spn_upbound.setBounds(218, 25, 66, 28);
 					panel_stretchsontrast.add(spn_upbound);
 					
 					JRadioButton rd_btn_stretchsontrast = new JRadioButton("Contrast Stretch");
 					rd_btn_stretchsontrast.addChangeListener(new ChangeListener() {
 						public void stateChanged(ChangeEvent e) {
-							spn_lowbound.setEnabled(rd_btn_stretchsontrast.isSelected());
+							spn_upbound.setEnabled(rd_btn_stretchsontrast.isSelected());
 							spn_upbound.setEnabled(rd_btn_stretchsontrast.isSelected());
 							
 							if(rd_btn_stretchsontrast.isSelected())
@@ -495,28 +491,40 @@ public class Menu {
 				
 					
 					
-					JLabel lbl_lowup = new JLabel("Low Bound   Up Bound");
+					JLabel lbl_lowup = new JLabel("Up Bound");
 					lbl_lowup.setFont(new Font("Monospaced", Font.PLAIN, 11));
-					lbl_lowup.setBounds(166, 10, 140, 13);
+					lbl_lowup.setBounds(218, 10, 76, 13);
 					panel_stretchsontrast.add(lbl_lowup);
 				
 				//......................HISTOGRAM-EGUALIZATION........................
 				JPanel panel_histogrameq = new JPanel();
 				panel_histogrameq.setLayout(null);
 				panel_histogrameq.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-				panel_histogrameq.setBounds(8, 185, 314, 55);
+				panel_histogrameq.setBounds(8, 185, 314, 75);
 				panel_contrastprocess.add(panel_histogrameq);
 				
 					JRadioButton rd_btn_histogrameq = new JRadioButton("Histogram Equalization");
 					rd_btn_histogrameq.addChangeListener(new ChangeListener() {
 						public void stateChanged(ChangeEvent e) {
+							spn_eqFactor.setEnabled(rd_btn_histogrameq.isSelected());
+							
 							if(rd_btn_histogrameq.isSelected())
 								serviceNumber=6;
 						}
 					});
 					rdbGroup.add(rd_btn_histogrameq);
-					rd_btn_histogrameq.setBounds(20, 15, 234, 21);
+					rd_btn_histogrameq.setBounds(15, 27, 155, 21);
 					panel_histogrameq.add(rd_btn_histogrameq);
+					
+					spn_eqFactor = new JSpinner(new SpinnerNumberModel(0,0,255,1));
+					spn_eqFactor.setEnabled(false);
+					spn_eqFactor.setBounds(215, 24, 66, 28);
+					panel_histogrameq.add(spn_eqFactor);
+					
+					JLabel lbl_eqfactor = new JLabel("Factor");
+					lbl_eqfactor.setFont(new Font("Monospaced", Font.PLAIN, 11));
+					lbl_eqfactor.setBounds(215, 10, 76, 13);
+					panel_histogrameq.add(lbl_eqfactor);
 			
 			//.......................GEOMETRIC.......................
 			JPanel panel_geometric = new JPanel();
@@ -668,7 +676,7 @@ public class Menu {
 					panel_filters.add(panel_lowfilter);
 						
 						
-						JComboBox<Object> cb_lowflter = new JComboBox<Object>();
+						cb_lowflter = new JComboBox<Object>();
 						cb_lowflter.setEnabled(false);
 						cb_lowflter.setFont(new Font("Monospaced", Font.ITALIC, 15));
 						cb_lowflter.setBounds(130, 15, 168, 21);
@@ -684,15 +692,7 @@ public class Menu {
 								cb_lowflter.setEnabled(rd_btn_lowfilter.isSelected());
 								
 								if(rd_btn_lowfilter.isSelected()) {
-									switch (cb_lowflter.getSelectedIndex()) {
-										case 0:
-											serviceNumber=13;
-										case 1:
-											serviceNumber=14;
-										case 2:
-											serviceNumber=15;
-									}
-									
+									serviceNumber=13;								
 								}
 									
 							}
@@ -711,7 +711,7 @@ public class Menu {
 					panel_filters.add(panel_highfilter);
 					
 					
-						JComboBox<Object> cb_highfilter = new JComboBox<Object>();
+						cb_highfilter = new JComboBox<Object>();
 						cb_highfilter.setEnabled(false);
 						cb_highfilter.setFont(new Font("Monospaced", Font.ITALIC, 15));
 						cb_highfilter.setBounds(130, 15, 168, 21);
@@ -726,15 +726,7 @@ public class Menu {
 								cb_highfilter.setEnabled(rd_btn_highfilter.isSelected());
 								
 								if(rd_btn_highfilter.isSelected()) {
-									switch (cb_highfilter.getSelectedIndex()) {
-										case 0:
-											serviceNumber=16;
-										case 1:
-											serviceNumber=17;
-										case 2:
-											serviceNumber=18;
-									}
-									
+									serviceNumber=16;
 								}
 							}
 						});
@@ -797,7 +789,7 @@ public class Menu {
 						rd_btn_opening.addChangeListener(new ChangeListener() {
 							public void stateChanged(ChangeEvent e) {
 								if(rd_btn_opening.isSelected())
-									serviceNumber=20;
+									serviceNumber=21;
 							}
 						});
 						rdbGroup.add(rd_btn_opening);
@@ -815,7 +807,7 @@ public class Menu {
 						rd_btn_closing.addChangeListener(new ChangeListener() {
 							public void stateChanged(ChangeEvent e) {
 								if(rd_btn_opening.isSelected())
-									serviceNumber=21;
+									serviceNumber=22;
 							}
 						});
 						rdbGroup.add(rd_btn_closing);
@@ -845,7 +837,7 @@ public class Menu {
 							public void stateChanged(ChangeEvent e) {
 
 								if(rd_btn_perspectivetransform.isEnabled())
-									serviceNumber=22;
+									serviceNumber=23;
 							}
 						});
 						rdbGroup.add(rd_btn_perspectivetransform);
@@ -970,7 +962,7 @@ public class Menu {
 					rd_btn_sharpeningbyconv.addChangeListener(new ChangeListener() {
 						public void stateChanged(ChangeEvent e) {
 							if(rd_btn_sharpeningbyconv.isSelected())
-								serviceNumber=23;
+								serviceNumber=24;
 						}
 					});
 					rdbGroup.add(rd_btn_sharpeningbyconv);
@@ -1074,6 +1066,8 @@ public class Menu {
 	
 	
 	public BufferedImage stretchContrast(BufferedImage img,int contrastBound) {
+		
+		BufferedImage imgStretchedCont=new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
 		//Get gray values of image
 		double[][] arr=getGrayValues(img);
 		
@@ -1105,12 +1099,12 @@ public class Menu {
 				int stretchedValue=contrastBound*((int)arr[i][j]-minGray)/Math.abs(maxGray-minGray);
 				
 				//Convert stretched gray value to RGB
-				img.setRGB(i,j,toRGB(stretchedValue));
+				imgStretchedCont.setRGB(i,j,toRGB(stretchedValue));
 			}
 			
 		}
 		
-		return img;
+		return imgStretchedCont;
 	}
 	
 	public BufferedImage histogramEq(BufferedImage src,float eqFactor) {
@@ -1305,6 +1299,7 @@ public class Menu {
  	
  	public void service(int whichService) {
  		
+ 		Filter filter;
  		long ms_start=System.currentTimeMillis();
  			//Create a case every image process
 			switch (whichService) {
@@ -1330,69 +1325,150 @@ public class Menu {
 				break;
 			}
 			case 4: {
+				//kontrast ayarlama
 			}
 			case 5: {
-
+				img_out=stretchContrast(img_in, (Integer) spn_upbound.getValue());
+				lbl_img_out.setIcon(new ImageIcon(img_out));
+				break;
 			}
 			case 6: {
-				
+				img_out=histogramEq(img_in, (Integer) spn_eqFactor.getValue());
+				lbl_img_out.setIcon(new ImageIcon(img_out));
+				break;
 			}
 			case 7: {
-
+				img_out=Geo.invertX(img_in);
+				lbl_img_out.setIcon(new ImageIcon(img_out));
+				break;
 			}
 			case 8: {
-
+				img_out=Geo.invertY(img_in);
+				lbl_img_out.setIcon(new ImageIcon(img_out));
+				break;
 			}
 			case 9: {
-
+				img_out=Geo.setOffSet(img_in,(Integer) spn_offsetX.getValue(),(Integer) spn_offsetY.getValue());
+				lbl_img_out.setIcon(new ImageIcon(img_out));
+				break;
 			}
 			case 10: {
-
+				img_out=Geo.rotate(img_in,(Integer) spn_angle.getValue());
+				lbl_img_out.setIcon(new ImageIcon(img_out));
+				break;
 			}
 			case 11: {
-
+				//Zoom in
+				break;
 			}
 			case 12: {
-
+				//Zoom out
+				break;
 			}
 			case 13: {
-
+				switch (cb_lowflter.getSelectedIndex()) {
+					//Gauss Selected
+					case 0: {	
+						filter=new GaussFilter(3);
+						img_out=filter.applyFilter(img_in);
+						lbl_img_out.setIcon(new ImageIcon(img_out));
+						break;
+					}
+					
+					//Mean Selected
+					case 1:{
+						//applyFilter func implement in Filter.class!!!!
+						filter=new Filter(3);
+						img_out=filter.applyFilter(img_in);
+						lbl_img_out.setIcon(new ImageIcon(img_out));
+						break;
+					}
+					
+					//Median Selected
+					case 2:{
+						filter=new MedianFilter(3);
+						img_out=filter.applyFilter(img_in);
+						lbl_img_out.setIcon(new ImageIcon(img_out));
+						break;
+					}
+				}
+				
 			}
 			case 14: {
-
+				
 			}
 			case 15: {
-
+				
 			}
 			case 16: {
-
+				switch (cb_highfilter.getSelectedIndex()) {
+				//Laplace Selected
+				case 0: {	
+					filter=new LaplaceFilter();
+					img_out=filter.applyFilter(img_in);
+					lbl_img_out.setIcon(new ImageIcon(img_out));
+					break;
+				}
+				
+				//Sobel Selected
+				case 1:{
+					filter=new HighFilter(HighFilter.SOBEL_KERNEL);
+					img_out=filter.applyFilter(img_in);
+					lbl_img_out.setIcon(new ImageIcon(img_out));
+					break;
+				}
+				
+				//Prewitt Selected
+				case 2:{
+					filter=new HighFilter(HighFilter.PREWITT_KERNEL);
+					img_out=filter.applyFilter(img_in);
+					lbl_img_out.setIcon(new ImageIcon(img_out));
+					break;
+				}
+			}
 			}
 			case 17: {
-
+				break;
 			}
 			case 18: {
-
+				break;
 			}
 			case 19: {
-
+				img_out=Morp.dilate(img_in,Morp.DEFAULT_KERNEL);
+				lbl_img_out.setIcon(new ImageIcon(img_out));
+				break;
+				
 			}
 			case 20: {
-
+				img_out=Morp.erode(img_in,Morp.DEFAULT_KERNEL);
+				lbl_img_out.setIcon(new ImageIcon(img_out));
+				break;
+				
 			}
 			case 21: {
-
+				img_out=Morp.open(img_in,Morp.DEFAULT_KERNEL);
+				lbl_img_out.setIcon(new ImageIcon(img_out));
+				break;
 			}
 			case 22: {
-
+				img_out=Morp.close(img_in,Morp.DEFAULT_KERNEL);
+				lbl_img_out.setIcon(new ImageIcon(img_out));
+				break;
 			}
 			case 23: {
 
 			}
 			
+			case 24: {
+				filter=new Sharp(Sharp.DEFAULT_KERNEL);
+				img_out=filter.applyFilter(img_in);
+				lbl_img_out.setIcon(new ImageIcon(img_out));
+				break;
+			}
+			
+			}
 			long ms_stop=System.currentTimeMillis();
 			
 			
-			}
  	}
- 	
 }

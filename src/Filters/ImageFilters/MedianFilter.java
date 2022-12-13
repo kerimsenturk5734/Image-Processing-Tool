@@ -24,6 +24,8 @@ public class MedianFilter extends Filter{
 	@Override
 	public BufferedImage applyFilter(BufferedImage img) {
 
+		BufferedImage imgMedian=new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
+		
 		int W=getFormat();
 		
 		ArrayList<Integer> sumRGB=new ArrayList<>();
@@ -57,7 +59,7 @@ public class MedianFilter extends Filter{
 				//Setting... the median value
 				int sumOfCoEff=sumOfMaskCoEfficent();
 				try {
-					img.setRGB(x+W/2, y+W/2,medianRGB);
+					imgMedian.setRGB(x+W/2, y+W/2,medianRGB);
 				} catch (Exception e) {
 					System.out.println("out of bound");
 				}
@@ -67,6 +69,6 @@ public class MedianFilter extends Filter{
 			}
 		}
 		
-		return img;
+		return imgMedian;
 	}
 }
