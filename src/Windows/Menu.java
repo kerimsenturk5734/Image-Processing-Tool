@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Timer;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -75,8 +76,8 @@ public class Menu {
 	private JFrame frame;
 	private JPanel panel_images;
 	private ButtonGroup rdbGroup;
-	private BufferedImage img_in;
-	private BufferedImage img_out;
+	public static BufferedImage img_in;
+	public static BufferedImage img_out;
 	private int serviceNumber=-1;
 	
 	
@@ -105,6 +106,8 @@ public class Menu {
 	JSpinner spn_Y3;
 	JSpinner spn_X4;
 	JSpinner spn_Y4;
+	JLabel lbl_img_in;
+	JLabel lbl_img_out;
 	
 	
 	/**
@@ -155,18 +158,13 @@ public class Menu {
 			panel.add(panel_images);
 			panel_images.setLayout(null);
 			
+			lbl_img_in = new JLabel("");
+			lbl_img_in.setBounds(30, 30, 474, 474);
+			panel_images.add(lbl_img_in);
 			
-			JLabel lbl_img1 = new JLabel();
-			lbl_img1.setBorder(new LineBorder(SystemColor.activeCaption, 2, true));
-			lbl_img1.setBackground(Color.BLACK);
-			lbl_img1.setBounds(29, 25, 474, 474);
-			panel_images.add(lbl_img1);
-			
-			JLabel lbl_img2 = new JLabel();
-			lbl_img2.setBorder(new LineBorder(SystemColor.activeCaption, 2));
-			lbl_img2.setBackground(Color.BLACK);
-			lbl_img2.setBounds(536, 25, 474, 474);
-			panel_images.add(lbl_img2);
+			lbl_img_out = new JLabel("");
+			lbl_img_out.setBounds(538, 30, 474, 474);
+			panel_images.add(lbl_img_out);
 
 		
 			//......................IMAGE-ACTION-PANEL.....................
@@ -198,6 +196,9 @@ public class Menu {
 				public void actionPerformed(ActionEvent e) {
 					if(img_out!=null)
 						createHistogram(img_out, "Ýþlenmiþ");
+					else {
+						JOptionPane.showMessageDialog(null,"Please import an image.");
+					}
 				}
 			});
 			btn_histogram_out.setBackground(new Color(255, 239, 213));
@@ -208,7 +209,7 @@ public class Menu {
 			JButton btn_import = new JButton("Import Image");
 			btn_import.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					JFileChooser j = new JFileChooser(FileSystemView.getFileSystemView());
+					JFileChooser j = new JFileChooser("C:\\Users\\kerim\\eclipse-workspace\\ImageProcess");
 					
 					// Get array of available formats
 					String[] suffices = ImageIO.getReaderFileSuffixes();
@@ -231,7 +232,7 @@ public class Menu {
 							//Then set img_in and label ico
 							try {
 								img_in=Geo.resizeImage(ImageIO.read(j.getSelectedFile()), 512, 512);
-								lbl_img1.setIcon(new ImageIcon(img_in));
+								lbl_img_in.setIcon(new ImageIcon(img_in));
 							} catch (IOException e1) {
 								e1.printStackTrace();
 							}
@@ -253,7 +254,7 @@ public class Menu {
 			btn_saveas.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					
-					Image img = ((ImageIcon) lbl_img2.getIcon()).getImage();
+					Image img = ((ImageIcon) lbl_img_out.getIcon()).getImage();
 					BufferedImage bi = new BufferedImage(img.getWidth(null),img.getHeight(null),BufferedImage.TYPE_INT_RGB);
 
 					Graphics2D g2 = bi.createGraphics();
@@ -280,8 +281,11 @@ public class Menu {
 			JButton btn_apply = new JButton("Apply");
 			btn_apply.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					if(serviceNumber!=-1)
+					if(serviceNumber!=-1) {
 						service(serviceNumber);
+						System.out.println(serviceNumber);
+					}
+						
 				}
 			});
 			btn_apply.setForeground(Color.WHITE);
@@ -981,35 +985,12 @@ public class Menu {
 		
 		
 		//////////RUNTIME///////////////////////
-		
-		
-		////ORIJINAL/////		
-		
-		
-		
-		
-		//////ÝÞLENMÝÞ///////
-		try {
-			img_out = ImageIO.read(new File("Images/lenna.jpg"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		int[][] mask=new int[][] {{1,1,1},{1,-4,1},{0,1,0}};
-		FilterManager filter=new FilterManager(new Sharp(Sharp.DEFAULT_KERNEL));
-		BufferedImage img=Geo.setOffSet(img_out,40,100);
-		
-		lbl_img2.setIcon(new ImageIcon(img));
-		lbl_img2.setBounds(lbl_img2.getBounds().x, lbl_img2.getBounds().y, img.getWidth(), img.getHeight());
-
-		//System.out.println(imgBufferedImage.getRGB(20, 20));
 	}
 	
 	
 	public BufferedImage imgToGray(BufferedImage img){
 		
-		int[][] arr=new int[img.getWidth()][img.getHeight()];
+		BufferedImage imgGray=new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
 		
 		for(int i=0;i<img.getWidth();i++){ 
 			
@@ -1030,14 +1011,16 @@ public class Menu {
                 // replace RGB value with avg 
                 p = (a << 24) | (avg << 16) | (avg << 8) | avg; 
   
-                img.setRGB(i, j, p);
+                imgGray.setRGB(i, j, p);
 			}
 		}
 		
-		return img;
+		return imgGray;
 	}
 	
-	public BufferedImage thresholdImage(BufferedImage img) {
+	public BufferedImage thresholdImage(BufferedImage img,int threshVal) {
+		
+		BufferedImage thresImg=new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
 		
 		double[][] arr=getGrayValues(img);
 		
@@ -1045,16 +1028,16 @@ public class Menu {
 			
 			for(int j=0;j<img.getHeight();j++) {
 				
-				if(arr[i][j]>128) {
-	               	img.setRGB(i,j,Color.WHITE.getRGB());
+				if(arr[i][j]>threshVal) {
+					thresImg.setRGB(i,j,Color.WHITE.getRGB());
 	             }
 	            else {
-	               	img.setRGB(i,j,Color.BLACK.getRGB());
+	            	thresImg.setRGB(i,j,Color.BLACK.getRGB());
 	             }	
 			}
 		}
 		
-		return img;
+		return thresImg;
 	}
 	
 	
@@ -1293,40 +1276,60 @@ public class Menu {
  		return grayImage;
  	}
  	
- 	public BufferedImage setBrightness(BufferedImage img,int amountOfBrightness) {
+ 	public BufferedImage setBrightness(BufferedImage img,int amountOfBrightness) {	
+ 		
+ 		BufferedImage imgBright=new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
+ 		
  		for(int i=0;i<img.getWidth();i++) {
  			
  			for(int j=0;j<img.getHeight();j++) {
- 				int currPixelValue=img.getRGB(i, j);
+ 				Color currentCol=new Color(img.getRGB(i, j));
  				
- 				img.setRGB(i, j, currPixelValue+toRGB(amountOfBrightness));
+ 				int R,G,B;
+ 				R=(currentCol.getRed()+amountOfBrightness<255) ? currentCol.getRed()+amountOfBrightness:255;
+ 				R=(R<0)?0:R;
+ 				G=(currentCol.getGreen()+amountOfBrightness<255) ? currentCol.getGreen()+amountOfBrightness:255;
+ 				G=(G<0)?0:G;
+ 				B=(currentCol.getBlue()+amountOfBrightness<255) ? currentCol.getBlue()+amountOfBrightness:255;
+ 				B=(B<0)?0:B;
+ 				
+ 				
+ 				imgBright.setRGB(i, j, new Color(R,G,B).getRGB());
  				
  			}
  		}
  		
- 		return img;
+ 		return imgBright;
  	}
  	
  	
  	public void service(int whichService) {
  		
+ 		long ms_start=System.currentTimeMillis();
  			//Create a case every image process
 			switch (whichService) {
 			
 			case 0: {
-
+				img_out=imgToGray(img_in);
+				lbl_img_out.setIcon(new ImageIcon(img_out));
+				break;
 			}
 			case 1: {
-
+				img_out=setBrightness(img_in, slider_brightness.getValue());
+				lbl_img_out.setIcon(new ImageIcon(img_out));
+				break;
 			}
 			case 2: {
-
+				img_out=thresholdImage(img_in, (Integer) spn_threshold.getValue());
+				lbl_img_out.setIcon(new ImageIcon(img_out));
+				break;
 			}
 			case 3: {
-
+				img_out=imgToNegative(img_in);
+				lbl_img_out.setIcon(new ImageIcon(img_out));
+				break;
 			}
 			case 4: {
-
 			}
 			case 5: {
 
@@ -1386,6 +1389,10 @@ public class Menu {
 
 			}
 			
+			long ms_stop=System.currentTimeMillis();
+			
+			
 			}
  	}
+ 	
 }
