@@ -153,7 +153,6 @@ public class Menu {
 			panel_images.add(lbl_img_out);
 
 		
-<<<<<<< Updated upstream
 			//......................IMAGE-ACTION-PANEL.....................
 			JPanel panel_image_actions = new JPanel();
 			panel_image_actions.setBackground(SystemColor.controlShadow);
