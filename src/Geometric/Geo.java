@@ -104,6 +104,7 @@ public class Geo {
 		return null;
 	}
 	
+
 	public static BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) throws IOException {
 	    BufferedImage resizedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_RGB);
 	    Graphics2D graphics2D = resizedImage.createGraphics();
@@ -112,4 +113,73 @@ public class Geo {
 	    
 	    return resizedImage;
 	}
+
+	public static BufferedImage transformPerspective
+		(BufferedImage img,int x1,int y1,int x2,int y2,int x3,int y3,int x4,int y4,
+				int X1,int Y1,int X2,int Y2,int X3,int Y3,int X4,int Y4){
+		
+		//[C]=[B].[A]
+		double[][] c=new double[][] {
+			{X1},
+			{Y1},
+			{X2},
+			{Y2},
+			{X3},
+			{Y3},
+			{X4},
+			{Y4}
+		};
+		
+		double[][] b=new double[][] {
+			{x1,y1,1,0,0,0,-x1*X1,-y1*X1},
+			{0,0,0,x1,y1,1,-x1*Y1,-x1*Y1},
+			{x2,y2,1,0,0,0,-x2*X2,-y2*X2},
+			{0,0,0,x2,y2,1,-x2*Y2,-x2*Y2},
+			{x3,y3,1,0,0,0,-x3*X3,-y3*X3},
+			{0,0,0,x3,y3,1,-x3*Y3,-x3*Y3},
+			{x4,y4,1,0,0,0,-x4*X4,-y4*X4},
+			{0,0,0,x4,y4,1,-x4*Y4,-x4*Y4}
+		};
+		
+		
+		Matrix C=new Matrix(c);
+		Matrix B=new Matrix(b);
+		
+		//[A]=[B]'[C]
+		Matrix A=B.inverse().times(C);
+		
+		BufferedImage outImg=new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
+		for(int x=0;x<img.getWidth();x++) {
+			
+			for(int y=0;y<img.getHeight();y++) {
+				
+				int z=(int)(A.get(6, 0)*x+A.get(7, 0)*y+1);
+				//System.out.println(A.get(6, 0)+"|"+x+"|"+A.get(7,0)+"|"+y);
+				//System.out.println(A.get(0, 0)+"|"+x+"|"+A.get(1,0)+"|"+y+"|"+A.get(2, 0)+"|"+z);
+				int outX=(int)((A.get(0, 0)*x+A.get(1,0)*y+A.get(2, 0))/z);
+				int outY=(int)((A.get(3, 0)*x+A.get(4,0)*y+A.get(5, 0))/z);
+				
+				//Set img pixel
+				//System.out.println(outX+" "+outY+"\n");
+				try {
+					outImg.setRGB(outX, outY, img.getRGB(x, y));
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+	
+			}
+			
+		}
+		
+		for (double[] ds : A.getArray()) {
+			for (double d : ds) {
+				System.out.println(d);
+			}
+		}
+		
+		return outImg;
+	
+	}
+
+	
 }
