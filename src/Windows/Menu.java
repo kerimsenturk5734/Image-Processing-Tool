@@ -1,7 +1,5 @@
 package Windows;
 import java.awt.EventQueue;
-import java.awt.FileDialog;
-
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import java.awt.image.BufferedImage;
@@ -9,15 +7,10 @@ import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Timer;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
-
 import javax.swing.JPanel;
 import javax.swing.ButtonGroup;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import org.jfree.chart.ChartFactory;
@@ -25,12 +18,7 @@ import org.jfree.chart.ChartFrame;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.statistics.HistogramDataset;
-import org.jfree.ui.ExtensionFileFilter;
-
 import Filters.Filter;
-import Filters.FilterManager;
-import Filters.IFilterDao;
-import Filters.IFilterService;
 import Filters.ImageFilters.GaussFilter;
 import Filters.ImageFilters.HighFilter;
 import Filters.ImageFilters.LaplaceFilter;
@@ -44,11 +32,8 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-
-import javax.swing.border.CompoundBorder;
 import java.awt.SystemColor;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.JTabbedPane;
@@ -58,12 +43,9 @@ import javax.swing.JRadioButton;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.filechooser.FileSystemView;
-import javax.swing.SpinnerModel;
 import javax.swing.JSlider;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
-import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -370,7 +352,7 @@ public class Menu {
 				
 				
 				
-				Hashtable<Integer,JLabel> position = new Hashtable();
+				Hashtable<Integer,JLabel> position = new Hashtable<Integer,JLabel>();
 				position.put(-128, new JLabel("-128"));
 				position.put(-64, new JLabel("-64"));
 				position.put(0, new JLabel("0"));
@@ -1000,7 +982,7 @@ public class Menu {
 			
 			for(int j=0;j<img.getHeight();j++) {
 				
-				Color c=new Color(img.getRGB(i, j));
+
 				
 				int p = img.getRGB(i, j); 
 				  
@@ -1053,7 +1035,6 @@ public class Menu {
 			
 			for(int j=0;j<img.getHeight();j++) {
 				
-				Color c=new Color(img.getRGB(i, j));
 				
 				int p = img.getRGB(i, j); 
 				  
@@ -1483,6 +1464,7 @@ public class Menu {
 			
 			}
 			long ms_stop=System.currentTimeMillis();
+			System.out.println(ms_stop-ms_start);
 			
 			
  	}

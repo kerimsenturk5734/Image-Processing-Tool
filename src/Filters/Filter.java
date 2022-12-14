@@ -4,7 +4,6 @@ package Filters;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
-import Filters.ImageFilters.HighFilter;
 
 public class Filter implements IFilterDao{
 	
@@ -86,7 +85,45 @@ public class Filter implements IFilterDao{
 	@Override
 	public BufferedImage applyFilter(BufferedImage img) {
 		
-		return null;
+		
+		int W= getFormat();
+		
+		BufferedImage imgFiltered=new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
+		
+		for (int x = 0; x < img.getWidth()-W; x++) {
+			
+			for (int y = 0; y < img.getHeight()-W; y++) {
+				
+				int sumR = 0,sumG=0,sumB=0;
+				
+				for (int i = 0; i< W; i++) {
+					
+					for (int j = 0; j < W; j++) {
+						
+						System.out.println(W);
+						Color c=new Color(img.getRGB(x+i, y+j));
+						
+						//Getting all R,G,B values summary in the mask area...
+						sumR+=mask[i][j]*c.getRed();
+						sumG+=mask[i][j]*c.getGreen();
+						sumB+=mask[i][j]*c.getBlue();
+						
+					}
+				}
+				
+				//Getting average value...
+				int R=sumR/(W*W);
+				int G=sumG/(W*W);
+				int B=sumB/(W*W);
+				
+				Color newCol=new Color(R,G,B);
+				
+				imgFiltered.setRGB(x+(W/2), y+(W/2), newCol.getRGB());
+				
+			}
+		}
+		
+		return imgFiltered;
 	}
 	
 	public static int[][] getGrayValues(BufferedImage img){
@@ -97,7 +134,6 @@ public class Filter implements IFilterDao{
 			
 			for(int j=0;j<img.getHeight();j++) {
 				
-				Color c=new Color(img.getRGB(i, j));
 				
 				int p = img.getRGB(i, j); 
 				  

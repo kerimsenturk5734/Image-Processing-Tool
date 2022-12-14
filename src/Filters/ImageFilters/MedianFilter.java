@@ -1,6 +1,5 @@
 package Filters.ImageFilters;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 
 import java.util.ArrayList;
@@ -57,7 +56,6 @@ public class MedianFilter extends Filter{
 				}
 				
 				//Setting... the median value
-				int sumOfCoEff=sumOfMaskCoEfficent();
 				try {
 					imgMedian.setRGB(x+W/2, y+W/2,medianRGB);
 				} catch (Exception e) {
