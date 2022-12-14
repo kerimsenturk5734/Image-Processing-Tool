@@ -90,6 +90,7 @@ public class Menu {
 	JSpinner spn_offsetX;
 	JSpinner spn_offsetY;
 	JSpinner spn_angle;
+	JSpinner spn_lowformat;
 	JSpinner spn_x1;
 	JSpinner spn_y1;
 	JSpinner spn_x2;
@@ -160,10 +161,12 @@ public class Menu {
 			panel_images.setLayout(null);
 			
 			lbl_img_in = new JLabel("");
+			lbl_img_in.setBorder(new LineBorder(SystemColor.activeCaption, 3));
 			lbl_img_in.setBounds(30, 30, 474, 474);
 			panel_images.add(lbl_img_in);
 			
 			lbl_img_out = new JLabel("");
+			lbl_img_out.setBorder(new LineBorder(SystemColor.activeCaption, 3));
 			lbl_img_out.setBounds(538, 30, 474, 474);
 			panel_images.add(lbl_img_out);
 
@@ -672,7 +675,7 @@ public class Menu {
 					JPanel panel_lowfilter = new JPanel();
 					panel_lowfilter.setLayout(null);
 					panel_lowfilter.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-					panel_lowfilter.setBounds(8, 60, 314, 60);
+					panel_lowfilter.setBounds(8, 33, 314, 96);
 					panel_filters.add(panel_lowfilter);
 						
 						
@@ -690,6 +693,7 @@ public class Menu {
 							public void stateChanged(ChangeEvent e) {
 								
 								cb_lowflter.setEnabled(rd_btn_lowfilter.isSelected());
+								spn_lowformat.setEnabled(rd_btn_lowfilter.isSelected());
 								
 								if(rd_btn_lowfilter.isSelected()) {
 									serviceNumber=13;								
@@ -700,6 +704,14 @@ public class Menu {
 						rdbGroup.add(rd_btn_lowfilter);
 						rd_btn_lowfilter.setBounds(20, 15, 95, 21);
 						panel_lowfilter.add(rd_btn_lowfilter);
+						
+						spn_lowformat = new JSpinner(new SpinnerNumberModel(3,3,9,2));
+						spn_lowformat.setBounds(230, 66, 68, 20);
+						panel_lowfilter.add(spn_lowformat);
+						
+						JLabel lblNewLabel_1 = new JLabel("Format:");
+						lblNewLabel_1.setBounds(230, 43, 40, 13);
+						panel_lowfilter.add(lblNewLabel_1);
 						
 						
 						
@@ -1366,10 +1378,12 @@ public class Menu {
 				break;
 			}
 			case 13: {
+				int format=(Integer) spn_lowformat.getValue();
+
 				switch (cb_lowflter.getSelectedIndex()) {
 					//Gauss Selected
 					case 0: {	
-						filter=new GaussFilter(3);
+						filter=new GaussFilter(format);
 						img_out=filter.applyFilter(img_in);
 						lbl_img_out.setIcon(new ImageIcon(img_out));
 						break;
@@ -1378,7 +1392,7 @@ public class Menu {
 					//Mean Selected
 					case 1:{
 						//applyFilter func implement in Filter.class!!!!
-						filter=new Filter(3);
+						filter=new Filter(format);
 						img_out=filter.applyFilter(img_in);
 						lbl_img_out.setIcon(new ImageIcon(img_out));
 						break;
@@ -1386,13 +1400,13 @@ public class Menu {
 					
 					//Median Selected
 					case 2:{
-						filter=new MedianFilter(3);
+						filter=new MedianFilter(format);
 						img_out=filter.applyFilter(img_in);
 						lbl_img_out.setIcon(new ImageIcon(img_out));
 						break;
 					}
 				}
-				
+				break;
 			}
 			case 14: {
 				
@@ -1402,30 +1416,31 @@ public class Menu {
 			}
 			case 16: {
 				switch (cb_highfilter.getSelectedIndex()) {
-				//Laplace Selected
-				case 0: {	
-					filter=new LaplaceFilter();
-					img_out=filter.applyFilter(img_in);
-					lbl_img_out.setIcon(new ImageIcon(img_out));
-					break;
+					//Laplace Selected
+					case 0: {	
+						filter=new LaplaceFilter();
+						img_out=filter.applyFilter(img_in);
+						lbl_img_out.setIcon(new ImageIcon(img_out));
+						break;
+					}
+					
+					//Sobel Selected
+					case 1:{
+						filter=new HighFilter(HighFilter.SOBEL_KERNEL);
+						img_out=filter.applyFilter(img_in);
+						lbl_img_out.setIcon(new ImageIcon(img_out));
+						break;
+					}
+					
+					//Prewitt Selected
+					case 2:{
+						filter=new HighFilter(HighFilter.PREWITT_KERNEL);
+						img_out=filter.applyFilter(img_in);
+						lbl_img_out.setIcon(new ImageIcon(img_out));
+						break;
+					}
 				}
-				
-				//Sobel Selected
-				case 1:{
-					filter=new HighFilter(HighFilter.SOBEL_KERNEL);
-					img_out=filter.applyFilter(img_in);
-					lbl_img_out.setIcon(new ImageIcon(img_out));
-					break;
-				}
-				
-				//Prewitt Selected
-				case 2:{
-					filter=new HighFilter(HighFilter.PREWITT_KERNEL);
-					img_out=filter.applyFilter(img_in);
-					lbl_img_out.setIcon(new ImageIcon(img_out));
-					break;
-				}
-			}
+				break;
 			}
 			case 17: {
 				break;
