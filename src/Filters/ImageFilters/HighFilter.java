@@ -32,7 +32,10 @@ public class HighFilter extends Filter{
 	
 	@Override
 	public BufferedImage applyFilter(BufferedImage img) {
-		 int w = img.getWidth();
+		 
+		BufferedImage imgHighFiltered=new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
+		
+		int w = img.getWidth();
 	     int h = img.getHeight();
 	       
 	     int pixel_x,pixel_y;
@@ -52,12 +55,12 @@ public class HighFilter extends Filter{
 	                 int val = (int)Math.sqrt((pixel_x * pixel_x) + (pixel_y * pixel_y));
 	                
 	                 
-	                 img.setRGB(x, y, toRGB(val));
+	                 imgHighFiltered.setRGB(x, y, toRGB(val));
 	                 
 	            }
 	        }
 	       
-	       return img;
+	       return imgHighFiltered;
 	}
 	
 	@Override

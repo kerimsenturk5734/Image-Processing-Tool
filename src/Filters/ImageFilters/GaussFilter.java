@@ -14,6 +14,9 @@ public class GaussFilter extends Filter {
 
 	@Override
 	public BufferedImage applyFilter(BufferedImage img) {
+		
+		BufferedImage imgFiltered=new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
+		
 		int W=getFormat();
 		
 		int sumR=0;
@@ -39,7 +42,7 @@ public class GaussFilter extends Filter {
 				
 				int sumOfCoEff=sumOfMaskCoEfficent();
 				try {
-					img.setRGB(x+W/2, y+W/2,new Color(sumR/sumOfCoEff,sumG/sumOfCoEff,sumB/sumOfCoEff).getRGB());
+					imgFiltered.setRGB(x+W/2, y+W/2,new Color(sumR/sumOfCoEff,sumG/sumOfCoEff,sumB/sumOfCoEff).getRGB());
 				} catch (Exception e) {
 					System.out.println("out of bound");
 				}
@@ -48,7 +51,7 @@ public class GaussFilter extends Filter {
 			}
 		}
 		
-		return img;
+		return imgFiltered;
 	}
 
 	@Override
@@ -80,7 +83,6 @@ public class GaussFilter extends Filter {
 		    for (int y = 0; y < W; ++y) 
 		    {
 		        mask[x][y]=(int) Math.round(kernel[x][y]*255);
-		        System.out.println(mask[x][y]);
 		    }
 		
 

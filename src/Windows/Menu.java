@@ -1,5 +1,7 @@
 package Windows;
 import java.awt.EventQueue;
+import java.awt.FileDialog;
+
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import java.awt.image.BufferedImage;
@@ -7,10 +9,15 @@ import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Timer;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+
 import javax.swing.JPanel;
 import javax.swing.ButtonGroup;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import org.jfree.chart.ChartFactory;
@@ -18,6 +25,8 @@ import org.jfree.chart.ChartFrame;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.statistics.HistogramDataset;
+import org.jfree.ui.ExtensionFileFilter;
+
 import Filters.Filter;
 import Filters.FilterManager;
 import Filters.IFilterDao;
@@ -30,10 +39,15 @@ import Filters.ImageFilters.Sharp;
 import Geometric.Geo;
 import Morphology.Morp;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+
 import javax.swing.border.CompoundBorder;
 import java.awt.SystemColor;
 import javax.swing.SpinnerNumberModel;
@@ -42,17 +56,62 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.JSpinner;
 import javax.swing.JRadioButton;
 import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 import javax.swing.SpinnerModel;
 import javax.swing.JSlider;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.SwingConstants;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.awt.event.ActionEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 
 public class Menu {
 
 	private JFrame frame;
 	private JPanel panel_images;
 	private ButtonGroup rdbGroup;
-
+	public static BufferedImage img_in;
+	public static BufferedImage img_out;
+	private int serviceNumber=-1;
+	
+	
+	//............Components............
+	JSlider slider_brightness;
+	JSpinner spn_threshold;
+	JSlider slider_contrast;
+	JSpinner spn_upbound;
+	JSpinner spn_eqFactor;
+	JSpinner spn_offsetX;
+	JSpinner spn_offsetY;
+	JSpinner spn_angle;
+	JSpinner spn_lowformat;
+	JSpinner spn_x1;
+	JSpinner spn_y1;
+	JSpinner spn_x2;
+	JSpinner spn_y2;
+	JSpinner spn_x3;
+	JSpinner spn_y3;
+	JSpinner spn_x4;
+	JSpinner spn_y4;
+	JSpinner spn_X1;
+	JSpinner spn_Y1;
+	JSpinner spn_X2;
+	JSpinner spn_Y2;
+	JSpinner spn_X3;
+	JSpinner spn_Y3;
+	JSpinner spn_X4;
+	JSpinner spn_Y4;
+	JLabel lbl_img_in;
+	JLabel lbl_img_out;
+	JComboBox<Object> cb_lowflter;
+	JComboBox<Object> cb_highfilter;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -101,18 +160,15 @@ public class Menu {
 			panel.add(panel_images);
 			panel_images.setLayout(null);
 			
+			lbl_img_in = new JLabel("");
+			lbl_img_in.setBorder(new LineBorder(SystemColor.activeCaption, 3));
+			lbl_img_in.setBounds(30, 30, 474, 474);
+			panel_images.add(lbl_img_in);
 			
-			JLabel lbl_img1 = new JLabel();
-			lbl_img1.setBorder(new LineBorder(SystemColor.activeCaption, 2, true));
-			lbl_img1.setBackground(Color.BLACK);
-			lbl_img1.setBounds(29, 25, 512, 512);
-			panel_images.add(lbl_img1);
-			
-			JLabel lbl_img2 = new JLabel();
-			lbl_img2.setBorder(new LineBorder(SystemColor.activeCaption, 2));
-			lbl_img2.setBackground(Color.BLACK);
-			lbl_img2.setBounds(536, 25, 512, 512);
-			panel_images.add(lbl_img2);
+			lbl_img_out = new JLabel("");
+			lbl_img_out.setBorder(new LineBorder(SystemColor.activeCaption, 3));
+			lbl_img_out.setBounds(538, 30, 474, 474);
+			panel_images.add(lbl_img_out);
 
 		
 			//......................IMAGE-ACTION-PANEL.....................
@@ -124,18 +180,74 @@ public class Menu {
 			panel_image_actions.setLayout(null);
 			
 			JButton btn_histogram_in = new JButton("Histogram");
+			btn_histogram_in.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					
+					if(img_in!=null)
+						createHistogram(img_in, "Orijinal");
+					else {
+						JOptionPane.showMessageDialog(null,"Please import an image.");
+					}
+				}
+			});
 			btn_histogram_in.setBackground(new Color(255, 239, 213));
 			btn_histogram_in.setFont(new Font("Monospaced", Font.BOLD, 15));
 			btn_histogram_in.setBounds(159, 25, 199, 29);
 			panel_image_actions.add(btn_histogram_in);
 			
 			JButton btn_histogram_out = new JButton("Histogram");
+			btn_histogram_out.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if(img_out!=null)
+						createHistogram(img_out, "Ýþlenmiþ");
+					else {
+						JOptionPane.showMessageDialog(null,"Please import an image.");
+					}
+				}
+			});
 			btn_histogram_out.setBackground(new Color(255, 239, 213));
 			btn_histogram_out.setFont(new Font("Monospaced", Font.BOLD, 15));
 			btn_histogram_out.setBounds(657, 25, 199, 29);
 			panel_image_actions.add(btn_histogram_out);
 			
 			JButton btn_import = new JButton("Import Image");
+			btn_import.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					JFileChooser j = new JFileChooser("C:\\Users\\kerim\\eclipse-workspace\\ImageProcess");
+					
+					// Get array of available formats
+					String[] suffices = ImageIO.getReaderFileSuffixes();
+
+					// Add a file filter for each one
+					for (int i = 0; i < suffices.length; i++) {
+					    FileFilter filter = new FileNameExtensionFilter(suffices[i] + " files", suffices[i]);
+					    j.addChoosableFileFilter(filter);
+					}
+
+					// Show dialog
+					j.setFileSelectionMode(JFileChooser.FILES_ONLY);
+					j.setAcceptAllFileFilterUsed(false);
+					int ret=j.showSaveDialog(null);
+					
+					
+					if(ret==0) {
+						
+						if(j.getSelectedFile().canRead()) {
+							//Then set img_in and label ico
+							try {
+								img_in=Geo.resizeImage(ImageIO.read(j.getSelectedFile()), 512, 512);
+								lbl_img_in.setIcon(new ImageIcon(img_in));
+							} catch (IOException e1) {
+								e1.printStackTrace();
+							}
+						}
+						else {
+							JOptionPane.showMessageDialog(null,"File not readable as image.");
+						}						
+					}
+					
+				}
+			});
 			btn_import.setForeground(Color.WHITE);
 			btn_import.setBackground(new Color(255, 0, 0));
 			btn_import.setFont(new Font("Monospaced", Font.BOLD, 15));
@@ -143,12 +255,43 @@ public class Menu {
 			panel_image_actions.add(btn_import);
 			
 			JButton btn_saveas = new JButton("Save as...");
+			btn_saveas.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					
+					Image img = ((ImageIcon) lbl_img_out.getIcon()).getImage();
+					BufferedImage bi = new BufferedImage(img.getWidth(null),img.getHeight(null),BufferedImage.TYPE_INT_RGB);
+
+					Graphics2D g2 = bi.createGraphics();
+					g2.drawImage(img, 0, 0, null);
+					g2.dispose();
+					
+					JFileChooser j=new JFileChooser();
+					int userSelection = j.showSaveDialog(frame);
+					if (userSelection == JFileChooser.APPROVE_OPTION) {
+					    try {
+							ImageIO.write(bi, "jpg", new File(j.getSelectedFile().getAbsolutePath()));
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+				}
+			});
 			btn_saveas.setBackground(SystemColor.textHighlight);
 			btn_saveas.setFont(new Font("Monospaced", Font.BOLD, 15));
 			btn_saveas.setBounds(657, 64, 199, 29);
 			panel_image_actions.add(btn_saveas);
 			
 			JButton btn_apply = new JButton("Apply");
+			btn_apply.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if(serviceNumber!=-1) {
+						service(serviceNumber);
+						System.out.println(serviceNumber);
+					}
+						
+				}
+			});
 			btn_apply.setForeground(Color.WHITE);
 			btn_apply.setBackground(Color.GREEN);
 			btn_apply.setFont(new Font("Monospaced", Font.BOLD, 15));
@@ -187,6 +330,12 @@ public class Menu {
 				panel_rgbtogray.setLayout(null);
 				
 				JRadioButton rd_btn_rgbtogray = new JRadioButton("RGB to Gray");
+				rd_btn_rgbtogray.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						if(rd_btn_rgbtogray.isSelected())
+							serviceNumber=0;
+					}
+				});
 				rdbGroup.add(rd_btn_rgbtogray);
 				rd_btn_rgbtogray.setBounds(20, 15, 150, 21);
 				panel_rgbtogray.add(rd_btn_rgbtogray);
@@ -198,16 +347,28 @@ public class Menu {
 				panel_setbrightness.setBounds(8, 93, 314, 60);
 				panel_dottedprocess.add(panel_setbrightness);
 				
-				JRadioButton rd_btn_setbrightness = new JRadioButton("Brightness");
-				rd_btn_setbrightness.setBounds(20, 15, 101, 21);
-				rdbGroup.add(rd_btn_setbrightness);
-				panel_setbrightness.add(rd_btn_setbrightness);
-				
-				JSlider slider_brightness = new JSlider();
+				slider_brightness = new JSlider();
+				slider_brightness.setEnabled(false);
 				slider_brightness.setValue(0);
 				slider_brightness.setMinimum(-128);
 				slider_brightness.setMaximum(127);
 				slider_brightness.setBounds(123, 8, 178, 45);
+				
+				JRadioButton rd_btn_setbrightness = new JRadioButton("Brightness");
+				rd_btn_setbrightness.addChangeListener(new ChangeListener() {
+					public void stateChanged(ChangeEvent e) {
+						slider_brightness.setEnabled(rd_btn_setbrightness.isSelected());
+						
+						if(rd_btn_setbrightness.isSelected())
+							serviceNumber=1;
+							
+					}
+				});
+				rd_btn_setbrightness.setBounds(20, 15, 101, 21);
+				rdbGroup.add(rd_btn_setbrightness);
+				panel_setbrightness.add(rd_btn_setbrightness);
+				
+				
 				
 				Hashtable<Integer,JLabel> position = new Hashtable();
 				position.put(-128, new JLabel("-128"));
@@ -227,14 +388,25 @@ public class Menu {
 				panel_threshold.setBounds(8, 166, 314, 55);
 				panel_dottedprocess.add(panel_threshold);
 				
+				spn_threshold = new JSpinner(new SpinnerNumberModel(0,0,255,1));
+				spn_threshold.setEnabled(false);
+				spn_threshold.setBounds(240, 16, 66, 28);
+				panel_threshold.add(spn_threshold);
+				
 				JRadioButton rd_btn_threshold = new JRadioButton("Threshold");
+				rd_btn_threshold.addChangeListener(new ChangeListener() {
+					public void stateChanged(ChangeEvent e) {
+						spn_threshold.setEnabled(rd_btn_threshold.isSelected());
+						
+						if(rd_btn_threshold.isSelected())
+							serviceNumber=2;
+					}
+				});
 				rd_btn_threshold.setBounds(20, 15, 150, 21);
 				rdbGroup.add(rd_btn_threshold);
 				panel_threshold.add(rd_btn_threshold);
 				
-				JSpinner spn_threshold = new JSpinner(new SpinnerNumberModel(0,0,255,1));
-				spn_threshold.setBounds(240, 16, 66, 28);
-				panel_threshold.add(spn_threshold);
+				
 				
 				
 				//.......................NEGATIVE.......................
@@ -245,6 +417,12 @@ public class Menu {
 				panel_dottedprocess.add(panel_negative);
 				
 				JRadioButton rd_btn_negative = new JRadioButton("Negative");
+				rd_btn_negative.addChangeListener(new ChangeListener() {
+					public void stateChanged(ChangeEvent e) {
+						if(rd_btn_negative.isSelected())
+							serviceNumber=3;
+					}
+				});
 				rd_btn_negative.setBounds(20, 15, 150, 21);
 				rdbGroup.add(rd_btn_negative);
 				panel_negative.add(rd_btn_negative);
@@ -262,12 +440,8 @@ public class Menu {
 				panel_setcontrast.setBounds(8, 20, 314, 60);
 				panel_contrastprocess.add(panel_setcontrast);
 				
-					JRadioButton rd_btn_setcontrast = new JRadioButton("Contrast");
-					rdbGroup.add(rd_btn_setcontrast);
-					rd_btn_setcontrast.setBounds(20, 15, 104, 21);
-					panel_setcontrast.add(rd_btn_setcontrast);
-					
-					JSlider slider_contrast = new JSlider();
+					slider_contrast = new JSlider();
+					slider_contrast.setEnabled(false);
 					slider_contrast.setValue(0);
 					slider_contrast.setPaintLabels(true);
 					slider_contrast.setMinimum(-128);
@@ -276,6 +450,21 @@ public class Menu {
 					slider_contrast.setLabelTable(position);
 					slider_brightness.setPaintLabels(true);
 					panel_setcontrast.add(slider_contrast);
+					
+					JRadioButton rd_btn_setcontrast = new JRadioButton("Contrast");
+					rd_btn_setcontrast.addChangeListener(new ChangeListener() {
+						public void stateChanged(ChangeEvent e) {
+							slider_contrast.setEnabled(rd_btn_setcontrast.isSelected());
+							
+							if(rd_btn_setcontrast.isSelected())
+								serviceNumber=4;
+						}
+					});
+					rdbGroup.add(rd_btn_setcontrast);
+					rd_btn_setcontrast.setBounds(20, 15, 104, 21);
+					panel_setcontrast.add(rd_btn_setcontrast);
+					
+					
 				
 				//......................STRETCH-CONTRAST........................
 				JPanel panel_stretchsontrast = new JPanel();
@@ -284,35 +473,61 @@ public class Menu {
 				panel_stretchsontrast.setBounds(8, 93, 314, 75);
 				panel_contrastprocess.add(panel_stretchsontrast);
 				
+					spn_upbound = new JSpinner(new SpinnerNumberModel(0,0,255,1));
+					spn_upbound.setEnabled(false);
+					spn_upbound.setBounds(218, 25, 66, 28);
+					panel_stretchsontrast.add(spn_upbound);
+					
 					JRadioButton rd_btn_stretchsontrast = new JRadioButton("Contrast Stretch");
+					rd_btn_stretchsontrast.addChangeListener(new ChangeListener() {
+						public void stateChanged(ChangeEvent e) {
+							spn_upbound.setEnabled(rd_btn_stretchsontrast.isSelected());
+							spn_upbound.setEnabled(rd_btn_stretchsontrast.isSelected());
+							
+							if(rd_btn_stretchsontrast.isSelected())
+								serviceNumber=5;
+						}
+					});
 					rdbGroup.add(rd_btn_stretchsontrast);
 					rd_btn_stretchsontrast.setBounds(20, 28, 142, 21);
 					panel_stretchsontrast.add(rd_btn_stretchsontrast);
 				
-					JSpinner spn_lowbound = new JSpinner(new SpinnerNumberModel(0,0,255,1));
-					spn_lowbound.setBounds(240, 28, 66, 28);
-					panel_stretchsontrast.add(spn_lowbound);
 					
-					JSpinner spn_upbound = new JSpinner(new SpinnerNumberModel(0,0,255,1));
-					spn_upbound.setBounds(162, 28, 66, 28);
-					panel_stretchsontrast.add(spn_upbound);
 					
-					JLabel lbl_lowup = new JLabel("Low Bound   Up Bound");
+					JLabel lbl_lowup = new JLabel("Up Bound");
 					lbl_lowup.setFont(new Font("Monospaced", Font.PLAIN, 11));
-					lbl_lowup.setBounds(166, 10, 140, 13);
+					lbl_lowup.setBounds(218, 10, 76, 13);
 					panel_stretchsontrast.add(lbl_lowup);
 				
 				//......................HISTOGRAM-EGUALIZATION........................
 				JPanel panel_histogrameq = new JPanel();
 				panel_histogrameq.setLayout(null);
 				panel_histogrameq.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-				panel_histogrameq.setBounds(8, 185, 314, 55);
+				panel_histogrameq.setBounds(8, 185, 314, 75);
 				panel_contrastprocess.add(panel_histogrameq);
 				
 					JRadioButton rd_btn_histogrameq = new JRadioButton("Histogram Equalization");
+					rd_btn_histogrameq.addChangeListener(new ChangeListener() {
+						public void stateChanged(ChangeEvent e) {
+							spn_eqFactor.setEnabled(rd_btn_histogrameq.isSelected());
+							
+							if(rd_btn_histogrameq.isSelected())
+								serviceNumber=6;
+						}
+					});
 					rdbGroup.add(rd_btn_histogrameq);
-					rd_btn_histogrameq.setBounds(20, 15, 234, 21);
+					rd_btn_histogrameq.setBounds(15, 27, 155, 21);
 					panel_histogrameq.add(rd_btn_histogrameq);
+					
+					spn_eqFactor = new JSpinner(new SpinnerNumberModel(0,0,255,1));
+					spn_eqFactor.setEnabled(false);
+					spn_eqFactor.setBounds(215, 24, 66, 28);
+					panel_histogrameq.add(spn_eqFactor);
+					
+					JLabel lbl_eqfactor = new JLabel("Factor");
+					lbl_eqfactor.setFont(new Font("Monospaced", Font.PLAIN, 11));
+					lbl_eqfactor.setBounds(215, 10, 76, 13);
+					panel_histogrameq.add(lbl_eqfactor);
 			
 			//.......................GEOMETRIC.......................
 			JPanel panel_geometric = new JPanel();
@@ -327,11 +542,23 @@ public class Menu {
 				panel_geometric.add(panel_invert);
 				
 					JRadioButton rd_btn_invertX = new JRadioButton("Invert-X");
+					rd_btn_invertX.addChangeListener(new ChangeListener() {
+						public void stateChanged(ChangeEvent e) {
+							if(rd_btn_invertX.isSelected())
+								serviceNumber=7;
+						}
+					});
 					rdbGroup.add(rd_btn_invertX);
 					rd_btn_invertX.setBounds(20, 15, 104, 21);
 					panel_invert.add(rd_btn_invertX);
 					
 					JRadioButton rd_btn_invertY = new JRadioButton("Invert-Y");
+					rd_btn_invertY.addChangeListener(new ChangeListener() {
+						public void stateChanged(ChangeEvent e) {
+							if(rd_btn_invertY.isSelected())
+								serviceNumber=8;
+						}
+					});
 					rdbGroup.add(rd_btn_invertY);
 					rd_btn_invertY.setBounds(170, 15, 104, 21);
 					panel_invert.add(rd_btn_invertY);
@@ -343,18 +570,31 @@ public class Menu {
 				panel_offset.setBounds(8, 83, 314, 60);
 				panel_geometric.add(panel_offset);
 				
+
+					spn_offsetY = new JSpinner(new SpinnerNumberModel());
+					spn_offsetY.setEnabled(false);
+					spn_offsetY.setBounds(240, 22, 66, 28);
+					panel_offset.add(spn_offsetY);
+					
+					spn_offsetX = new JSpinner(new SpinnerNumberModel());
+					spn_offsetX.setEnabled(false);
+					spn_offsetX.setBounds(160, 22, 66, 28);
+					panel_offset.add(spn_offsetX);
+					
 					JRadioButton rd_btn_setoffset = new JRadioButton("Offset");
+					rd_btn_setoffset.addChangeListener(new ChangeListener() {
+						public void stateChanged(ChangeEvent e) {
+							spn_offsetX.setEnabled(rd_btn_setoffset.isSelected());
+							spn_offsetY.setEnabled(spn_offsetX.isEnabled());
+							
+							if(rd_btn_setoffset.isSelected())
+								serviceNumber=9;
+						}
+					});
 					rdbGroup.add(rd_btn_setoffset);
 					rd_btn_setoffset.setBounds(20, 15, 101, 21);
 					panel_offset.add(rd_btn_setoffset);
 					
-					JSpinner spn_offsetY = new JSpinner(new SpinnerNumberModel());
-					spn_offsetY.setBounds(240, 22, 66, 28);
-					panel_offset.add(spn_offsetY);
-					
-					JSpinner spn_offsetX = new JSpinner(new SpinnerNumberModel());
-					spn_offsetX.setBounds(160, 22, 66, 28);
-					panel_offset.add(spn_offsetX);
 					
 					JLabel lbl_offset = new JLabel("X          Y");
 					lbl_offset.setFont(new Font("Monospaced", Font.PLAIN, 11));
@@ -368,14 +608,25 @@ public class Menu {
 				panel_rotate.setBounds(8, 156, 314, 55);
 				panel_geometric.add(panel_rotate);
 				
+					spn_angle = new JSpinner(new SpinnerNumberModel());
+					spn_angle.setEnabled(false);
+					spn_angle.setBounds(240, 16, 66, 28);
+					panel_rotate.add(spn_angle);
+				
 					JRadioButton rd_btn_rotate = new JRadioButton("Rotate");
+					rd_btn_rotate.addChangeListener(new ChangeListener() {
+						public void stateChanged(ChangeEvent e) {
+							spn_angle.setEnabled(rd_btn_rotate.isSelected());
+							
+							if(rd_btn_rotate.isSelected())
+								serviceNumber=10;
+						}
+					});
 					rdbGroup.add(rd_btn_rotate);
 					rd_btn_rotate.setBounds(20, 15, 150, 21);
 					panel_rotate.add(rd_btn_rotate);
 					
-					JSpinner spn_angle = new JSpinner(new SpinnerNumberModel());
-					spn_angle.setBounds(240, 16, 66, 28);
-					panel_rotate.add(spn_angle);
+					
 			
 				//......................SCALE........................
 				JPanel panel_scale = new JPanel();
@@ -385,11 +636,24 @@ public class Menu {
 				panel_geometric.add(panel_scale);
 				
 					JRadioButton rd_btn_zoomin = new JRadioButton("Zoom In");
+					rd_btn_zoomin.addChangeListener(new ChangeListener() {
+						public void stateChanged(ChangeEvent e) {
+							if(rd_btn_zoomin.isSelected())
+								serviceNumber=11;
+						}
+					});
 					rdbGroup.add(rd_btn_zoomin);
 					rd_btn_zoomin.setBounds(20, 15, 104, 21);
 					panel_scale.add(rd_btn_zoomin);
 					
 					JRadioButton rd_btn_zoomout = new JRadioButton("Zoom Out");
+					rd_btn_zoomout.addChangeListener(new ChangeListener() {
+						public void stateChanged(ChangeEvent e) {
+							
+							if(rd_btn_zoomout.isSelected())
+								serviceNumber=12;
+						}
+					});
 					rdbGroup.add(rd_btn_zoomout);
 					rd_btn_zoomout.setBounds(181, 15, 115, 21);
 					panel_scale.add(rd_btn_zoomout);
@@ -411,21 +675,45 @@ public class Menu {
 					JPanel panel_lowfilter = new JPanel();
 					panel_lowfilter.setLayout(null);
 					panel_lowfilter.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-					panel_lowfilter.setBounds(8, 60, 314, 60);
+					panel_lowfilter.setBounds(8, 33, 314, 96);
 					panel_filters.add(panel_lowfilter);
-					
-						JRadioButton rd_btn_lowfilter = new JRadioButton("Low Filters");
-						rdbGroup.add(rd_btn_lowfilter);
-						rd_btn_lowfilter.setBounds(20, 15, 95, 21);
-						panel_lowfilter.add(rd_btn_lowfilter);
 						
-						JComboBox<Object> cb_lowflter = new JComboBox<Object>();
+						
+						cb_lowflter = new JComboBox<Object>();
+						cb_lowflter.setEnabled(false);
 						cb_lowflter.setFont(new Font("Monospaced", Font.ITALIC, 15));
 						cb_lowflter.setBounds(130, 15, 168, 21);
 						cb_lowflter.addItem("GAUSS_FILTER");
 						cb_lowflter.addItem("MEAN_FILTER");
 						cb_lowflter.addItem("MEDIAN_FILTER");
 						panel_lowfilter.add(cb_lowflter);
+					
+						JRadioButton rd_btn_lowfilter = new JRadioButton("Low Filters");
+						rd_btn_lowfilter.addChangeListener(new ChangeListener() {
+							public void stateChanged(ChangeEvent e) {
+								
+								cb_lowflter.setEnabled(rd_btn_lowfilter.isSelected());
+								spn_lowformat.setEnabled(rd_btn_lowfilter.isSelected());
+								
+								if(rd_btn_lowfilter.isSelected()) {
+									serviceNumber=13;								
+								}
+									
+							}
+						});
+						rdbGroup.add(rd_btn_lowfilter);
+						rd_btn_lowfilter.setBounds(20, 15, 95, 21);
+						panel_lowfilter.add(rd_btn_lowfilter);
+						
+						spn_lowformat = new JSpinner(new SpinnerNumberModel(3,3,9,2));
+						spn_lowformat.setBounds(230, 66, 68, 20);
+						panel_lowfilter.add(spn_lowformat);
+						
+						JLabel lblNewLabel_1 = new JLabel("Format:");
+						lblNewLabel_1.setBounds(230, 43, 40, 13);
+						panel_lowfilter.add(lblNewLabel_1);
+						
+						
 						
 					//......................HIGH-FILTERS........................
 					JPanel panel_highfilter = new JPanel();
@@ -434,18 +722,31 @@ public class Menu {
 					panel_highfilter.setBounds(8, 180, 314, 60);
 					panel_filters.add(panel_highfilter);
 					
-						JRadioButton rd_btn_highfilter = new JRadioButton("High Filters");
-						rdbGroup.add(rd_btn_highfilter);
-						rd_btn_highfilter.setBounds(20, 15, 96, 21);
-						panel_highfilter.add(rd_btn_highfilter);
-						
-						JComboBox<Object> cb_highfilter = new JComboBox<Object>();
+					
+						cb_highfilter = new JComboBox<Object>();
+						cb_highfilter.setEnabled(false);
 						cb_highfilter.setFont(new Font("Monospaced", Font.ITALIC, 15));
 						cb_highfilter.setBounds(130, 15, 168, 21);
 						cb_highfilter.addItem("LAPLACE_FILTER");
 						cb_highfilter.addItem("SOBEL_FILTER");
 						cb_highfilter.addItem("PREWITT_FILTER");
 						panel_highfilter.add(cb_highfilter);
+					
+						JRadioButton rd_btn_highfilter = new JRadioButton("High Filters");
+						rd_btn_highfilter.addChangeListener(new ChangeListener() {
+							public void stateChanged(ChangeEvent e) {
+								cb_highfilter.setEnabled(rd_btn_highfilter.isSelected());
+								
+								if(rd_btn_highfilter.isSelected()) {
+									serviceNumber=16;
+								}
+							}
+						});
+						rdbGroup.add(rd_btn_highfilter);
+						rd_btn_highfilter.setBounds(20, 15, 96, 21);
+						panel_highfilter.add(rd_btn_highfilter);
+						
+						
 				
 				//......................MORPHOLOGY........................
 				JPanel panel_morphology = new JPanel();
@@ -461,6 +762,12 @@ public class Menu {
 					panel_morphology.add(panel_dilate);
 					
 						JRadioButton rd_btn_dilate = new JRadioButton("Dilation");
+						rd_btn_dilate.addChangeListener(new ChangeListener() {
+							public void stateChanged(ChangeEvent e) {
+								if(rd_btn_dilate.isSelected())
+									serviceNumber=19;
+							}
+						});
 						rdbGroup.add(rd_btn_dilate);
 						rd_btn_dilate.setBounds(20, 15, 150, 21);
 						panel_dilate.add(rd_btn_dilate);
@@ -473,6 +780,12 @@ public class Menu {
 					panel_morphology.add(panel_erode);
 					
 						JRadioButton rd_btn_eroding = new JRadioButton("Eroding");
+						rd_btn_eroding.addChangeListener(new ChangeListener() {
+							public void stateChanged(ChangeEvent e) {
+								if(rd_btn_eroding.isSelected())
+									serviceNumber=20;
+							}
+						});
 						rdbGroup.add(rd_btn_eroding);
 						rd_btn_eroding.setBounds(20, 15, 101, 21);
 						panel_erode.add(rd_btn_eroding);
@@ -485,6 +798,12 @@ public class Menu {
 					panel_morphology.add(panel_open);
 					
 						JRadioButton rd_btn_opening = new JRadioButton("Open");
+						rd_btn_opening.addChangeListener(new ChangeListener() {
+							public void stateChanged(ChangeEvent e) {
+								if(rd_btn_opening.isSelected())
+									serviceNumber=21;
+							}
+						});
 						rdbGroup.add(rd_btn_opening);
 						rd_btn_opening.setBounds(20, 15, 150, 21);
 						panel_open.add(rd_btn_opening);
@@ -497,6 +816,12 @@ public class Menu {
 					panel_morphology.add(panel_close);
 					
 						JRadioButton rd_btn_closing = new JRadioButton("Close");
+						rd_btn_closing.addChangeListener(new ChangeListener() {
+							public void stateChanged(ChangeEvent e) {
+								if(rd_btn_opening.isSelected())
+									serviceNumber=22;
+							}
+						});
 						rdbGroup.add(rd_btn_closing);
 						rd_btn_closing.setBounds(20, 15, 150, 21);
 						panel_close.add(rd_btn_closing);
@@ -513,114 +838,131 @@ public class Menu {
 					panel_perspectivetransform.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 					panel_perspectivetransform.setBounds(8, 10, 314, 219);
 					panel_extras.add(panel_perspectivetransform);
-					
+						JPanel panel_coordinates = new JPanel();
+						panel_coordinates.setEnabled(false);
+						panel_coordinates.setBounds(8, 39, 298, 173);
+						panel_perspectivetransform.add(panel_coordinates);
+						panel_coordinates.setLayout(null);
+						
 						JRadioButton rd_btn_perspectivetransform = new JRadioButton("Perspective Transform");
+						rd_btn_perspectivetransform.addChangeListener(new ChangeListener() {
+							public void stateChanged(ChangeEvent e) {
+
+								if(rd_btn_perspectivetransform.isEnabled())
+									serviceNumber=23;
+							}
+						});
 						rdbGroup.add(rd_btn_perspectivetransform);
 						rd_btn_perspectivetransform.setBounds(20, 15, 166, 21);
 						panel_perspectivetransform.add(rd_btn_perspectivetransform);
-						
-						JLabel lbl_xy1 = new JLabel("x1:                 y1:");
-						lbl_xy1.setBackground(Color.YELLOW);
-						lbl_xy1.setBounds(23, 40, 99, 13);
-						panel_perspectivetransform.add(lbl_xy1);
-						
-						JSpinner spn_x1 = new JSpinner(new SpinnerNumberModel());
-						spn_x1.setBounds(8, 55, 60, 20);
-						panel_perspectivetransform.add(spn_x1);
-						
-						JSpinner spn_y1 = new JSpinner(new SpinnerNumberModel());
-						spn_y1.setBounds(75, 55, 60, 20);
-						panel_perspectivetransform.add(spn_y1);
-
-						JLabel lbl_xy2 = new JLabel("x2:                 y2:");
-						lbl_xy2.setBounds(23, 85, 99, 13);
-						panel_perspectivetransform.add(lbl_xy2);
-						
-						JSpinner spn_x2 = new JSpinner(new SpinnerNumberModel());
-						spn_x2.setBounds(8, 100, 60, 20);
-						panel_perspectivetransform.add(spn_x2);
-						
-						JSpinner spn_y2 = new JSpinner(new SpinnerNumberModel());
-						spn_y2.setBounds(75, 100, 60, 20);
-						panel_perspectivetransform.add(spn_y2);
-						
-						JLabel lbl_xy3 = new JLabel("x3:                 y3:");
-						lbl_xy3.setBounds(23, 130, 99, 13);
-						panel_perspectivetransform.add(lbl_xy3);
-						
-						JSpinner spn_x3 = new JSpinner(new SpinnerNumberModel());
-						spn_x3.setBounds(8, 145, 60, 20);
-						panel_perspectivetransform.add(spn_x3);
-						
-						JSpinner spn_y3 = new JSpinner(new SpinnerNumberModel());
-						spn_y3.setBounds(75, 145, 60, 20);
-						panel_perspectivetransform.add(spn_y3);
-						
-						JLabel lbl_xy4 = new JLabel("x4:                 y4:");
-						lbl_xy4.setBounds(23, 174, 99, 13);
-						panel_perspectivetransform.add(lbl_xy4);
-						
-						JSpinner spn_x4 = new JSpinner(new SpinnerNumberModel());
-						spn_x4.setBounds(8, 189, 60, 20);
-						panel_perspectivetransform.add(spn_x4);
-						
-						JSpinner spn_y4 = new JSpinner(new SpinnerNumberModel());
-						spn_y4.setBounds(75, 189, 60, 20);
-						panel_perspectivetransform.add(spn_y4);
-						
-						JLabel lbl_XY1 = new JLabel("X1':                 Y1':");
-						lbl_XY1.setBounds(194, 40, 99, 13);
-						panel_perspectivetransform.add(lbl_XY1);
-						
-						JSpinner spn_X1 = new JSpinner(new SpinnerNumberModel());
-						spn_X1.setBounds(179, 55, 60, 20);
-						panel_perspectivetransform.add(spn_X1);
-						
-						JSpinner spn_Y1 = new JSpinner(new SpinnerNumberModel());
-						spn_Y1.setBounds(246, 55, 60, 20);
-						panel_perspectivetransform.add(spn_Y1);
-						
-						JLabel lbl_XY2 = new JLabel("X2':                Y2':");
-						lbl_XY2.setBounds(194, 85, 99, 13);
-						panel_perspectivetransform.add(lbl_XY2);
-						
-						JSpinner spn_X2 = new JSpinner(new SpinnerNumberModel());
-						spn_X2.setBounds(179, 100, 60, 20);
-						panel_perspectivetransform.add(spn_X2);
-						
-						JSpinner spn_Y2 = new JSpinner(new SpinnerNumberModel());
-						spn_Y2.setBounds(246, 100, 60, 20);
-						panel_perspectivetransform.add(spn_Y2);
-						
-						JLabel lbl_XY3 = new JLabel("X3':                 Y3':");
-						lbl_XY3.setBounds(194, 130, 99, 13);
-						panel_perspectivetransform.add(lbl_XY3);
-						
-						JSpinner spn_X3 = new JSpinner(new SpinnerNumberModel());
-						spn_X3.setBounds(179, 145, 60, 20);
-						panel_perspectivetransform.add(spn_X3);
-						
-						JSpinner spn_Y3 = new JSpinner(new SpinnerNumberModel());
-						spn_Y3.setBounds(246, 145, 60, 20);
-						panel_perspectivetransform.add(spn_Y3);
-						
-						JLabel lbl_XY4 = new JLabel("X4':                 X4':");
-						lbl_XY4.setBounds(194, 174, 99, 13);
-						panel_perspectivetransform.add(lbl_XY4);
-						
-						JSpinner spn_X4 = new JSpinner(new SpinnerNumberModel());
-						spn_X4.setBounds(179, 189, 60, 20);
-						panel_perspectivetransform.add(spn_X4);
-												
-						JSpinner spn_Y4 = new JSpinner(new SpinnerNumberModel());
-						spn_Y4.setBounds(246, 189, 60, 20);
-						panel_perspectivetransform.add(spn_Y4);
 						
 						JLabel lblNewLabel = new JLabel("");
 						lblNewLabel.setBackground(Color.RED);
 						lblNewLabel.setBounds(153, 61, 11, 151);
 						panel_perspectivetransform.add(lblNewLabel);
-					
+						
+						
+						
+							JLabel lbl_xy1 = new JLabel("x1:                 y1:");
+							lbl_xy1.setBackground(Color.YELLOW);
+							lbl_xy1.setBounds(15, 0, 99, 13);
+							panel_coordinates.add(lbl_xy1);
+							
+							spn_x1 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
+							spn_x1.setBounds(0, 15, 60, 20);
+							panel_coordinates.add(spn_x1);
+							
+							spn_y1 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
+							spn_y1.setBounds(67, 15, 60, 20);
+							panel_coordinates.add(spn_y1);
+							
+							JLabel lbl_xy2 = new JLabel("x2:                 y2:");
+							lbl_xy2.setBounds(15, 45, 99, 13);
+							panel_coordinates.add(lbl_xy2);
+							
+							spn_x2 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
+							spn_x2.setBounds(0, 60, 60, 20);
+							panel_coordinates.add(spn_x2);
+							
+							spn_y2 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
+							spn_y2.setBounds(67, 60, 60, 20);
+							panel_coordinates.add(spn_y2);
+							
+							JLabel lbl_xy3 = new JLabel("x3:                 y3:");
+							lbl_xy3.setBounds(15, 90, 99, 13);
+							panel_coordinates.add(lbl_xy3);
+							
+							spn_x3 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
+							spn_x3.setBounds(0, 105, 60, 20);
+							panel_coordinates.add(spn_x3);
+							
+							spn_y3 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
+							spn_y3.setBounds(67, 105, 60, 20);
+							panel_coordinates.add(spn_y3);
+							
+							JLabel lbl_xy4 = new JLabel("x4:                 y4:");
+							lbl_xy4.setBounds(15, 134, 99, 13);
+							panel_coordinates.add(lbl_xy4);
+							
+							spn_x4 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
+							spn_x4.setBounds(0, 149, 60, 20);
+							panel_coordinates.add(spn_x4);							
+							
+							spn_y4 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
+							spn_y4.setBounds(67, 149, 60, 20);
+							panel_coordinates.add(spn_y4);
+							
+							JLabel lbl_XY1 = new JLabel("X1':                 Y1':");
+							lbl_XY1.setBounds(186, 0, 99, 13);
+							panel_coordinates.add(lbl_XY1);
+							
+							spn_X1 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
+							spn_X1.setBounds(171, 15, 60, 20);
+							panel_coordinates.add(spn_X1);
+							
+							spn_Y1 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
+							spn_Y1.setBounds(238, 15, 60, 20);
+							panel_coordinates.add(spn_Y1);
+							
+							JLabel lbl_XY2 = new JLabel("X2':                Y2':");
+							lbl_XY2.setBounds(186, 45, 99, 13);
+							panel_coordinates.add(lbl_XY2);
+							
+							spn_X2 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
+							spn_X2.setBounds(171, 60, 60, 20);
+							panel_coordinates.add(spn_X2);
+	
+							spn_Y2 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
+							spn_Y2.setBounds(238, 60, 60, 20);
+							panel_coordinates.add(spn_Y2);
+							
+							JLabel lbl_XY3 = new JLabel("X3':                 Y3':");
+							lbl_XY3.setBounds(186, 90, 99, 13);
+							panel_coordinates.add(lbl_XY3);
+							
+							spn_X3 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
+							spn_X3.setBounds(171, 105, 60, 20);
+							panel_coordinates.add(spn_X3);
+
+							spn_Y3 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
+							spn_Y3.setBounds(238, 105, 60, 20);
+							panel_coordinates.add(spn_Y3);
+							
+							JLabel lbl_XY4 = new JLabel("X4':                 X4':");
+							lbl_XY4.setBounds(186, 134, 99, 13);
+							panel_coordinates.add(lbl_XY4);
+							
+							spn_Y4 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
+							spn_Y4.setBounds(238, 149, 60, 20);
+							panel_coordinates.add(spn_Y4);
+							
+							spn_X4 = new JSpinner(new SpinnerNumberModel(0, 0, 474, 1));
+							spn_X4.setBounds(171, 149, 60, 20);
+							panel_coordinates.add(spn_X4);
+							
+						
+							
+							
 					//.....................SHARPENING-BY-CONVOLUTION.........................
 					JPanel panel_sharpeningbyconv = new JPanel();
 					panel_sharpeningbyconv.setLayout(null);
@@ -629,6 +971,12 @@ public class Menu {
 					panel_extras.add(panel_sharpeningbyconv);
 					
 					JRadioButton rd_btn_sharpeningbyconv = new JRadioButton("Sharpening by Convolution");
+					rd_btn_sharpeningbyconv.addChangeListener(new ChangeListener() {
+						public void stateChanged(ChangeEvent e) {
+							if(rd_btn_sharpeningbyconv.isSelected())
+								serviceNumber=24;
+						}
+					});
 					rdbGroup.add(rd_btn_sharpeningbyconv);
 					rd_btn_sharpeningbyconv.setBounds(20, 15, 210, 21);
 					panel_sharpeningbyconv.add(rd_btn_sharpeningbyconv);
@@ -641,44 +989,12 @@ public class Menu {
 		
 		
 		//////////RUNTIME///////////////////////
-		BufferedImage imgBufferedImage=null;
-		try {
-			imgBufferedImage = ImageIO.read(new File("Images/lenna.jpg"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		////ORIJINAL/////		
-		BufferedImage imgOriginal=null;
-		try {
-			imgOriginal = ImageIO.read(new File("Images/lenna.jpg"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		createHistogram(getPixelValues(getGrayValues(imgOriginal)),"Orijinal");
-		lbl_img1.setIcon(new ImageIcon(imgOriginal));
-		lbl_img1.setBounds(lbl_img1.getBounds().x, lbl_img1.getBounds().y, imgOriginal.getWidth(), imgOriginal.getHeight());
-		
-		
-		//////ÝÞLENMÝÞ///////
-		int[][] mask=new int[][] {{1,1,1},{1,-4,1},{0,1,0}};
-		FilterManager filter=new FilterManager(new Sharp(Sharp.DEFAULT_KERNEL));
-		BufferedImage img=filter.applyFilter(imgBufferedImage);
-		
-		createHistogram(getPixelValues(getGrayValues(img)),"Ýþlenmiþ");
-		lbl_img2.setIcon(new ImageIcon(img));
-		lbl_img2.setBounds(lbl_img2.getBounds().x, lbl_img2.getBounds().y, img.getWidth(), img.getHeight());
-
-		//System.out.println(imgBufferedImage.getRGB(20, 20));
 	}
 	
 	
 	public BufferedImage imgToGray(BufferedImage img){
 		
-		int[][] arr=new int[img.getWidth()][img.getHeight()];
+		BufferedImage imgGray=new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
 		
 		for(int i=0;i<img.getWidth();i++){ 
 			
@@ -699,14 +1015,16 @@ public class Menu {
                 // replace RGB value with avg 
                 p = (a << 24) | (avg << 16) | (avg << 8) | avg; 
   
-                img.setRGB(i, j, p);
+                imgGray.setRGB(i, j, p);
 			}
 		}
 		
-		return img;
+		return imgGray;
 	}
 	
-	public BufferedImage thresholdImage(BufferedImage img) {
+	public BufferedImage thresholdImage(BufferedImage img,int threshVal) {
+		
+		BufferedImage thresImg=new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
 		
 		double[][] arr=getGrayValues(img);
 		
@@ -714,16 +1032,16 @@ public class Menu {
 			
 			for(int j=0;j<img.getHeight();j++) {
 				
-				if(arr[i][j]>128) {
-	               	img.setRGB(i,j,Color.WHITE.getRGB());
+				if(arr[i][j]>threshVal) {
+					thresImg.setRGB(i,j,Color.WHITE.getRGB());
 	             }
 	            else {
-	               	img.setRGB(i,j,Color.BLACK.getRGB());
+	            	thresImg.setRGB(i,j,Color.BLACK.getRGB());
 	             }	
 			}
 		}
 		
-		return img;
+		return thresImg;
 	}
 	
 	
@@ -760,6 +1078,8 @@ public class Menu {
 	
 	
 	public BufferedImage stretchContrast(BufferedImage img,int contrastBound) {
+		
+		BufferedImage imgStretchedCont=new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
 		//Get gray values of image
 		double[][] arr=getGrayValues(img);
 		
@@ -791,12 +1111,12 @@ public class Menu {
 				int stretchedValue=contrastBound*((int)arr[i][j]-minGray)/Math.abs(maxGray-minGray);
 				
 				//Convert stretched gray value to RGB
-				img.setRGB(i,j,toRGB(stretchedValue));
+				imgStretchedCont.setRGB(i,j,toRGB(stretchedValue));
 			}
 			
 		}
 		
-		return img;
+		return imgStretchedCont;
 	}
 	
 	public BufferedImage histogramEq(BufferedImage src,float eqFactor) {
@@ -841,11 +1161,12 @@ public class Menu {
 		return nImg;
 	}
 	
-	public void createHistogram(double[] pixelValues,String histName) {
+	public void createHistogram(BufferedImage img,String histName) {
 		
 		HistogramDataset histogramDataset = new HistogramDataset();
-	
-		histogramDataset.addSeries("H1", pixelValues, 255, 0.0, 255);
+		
+		double[] pixelValues=getPixelValues(getGrayValues(img));
+		histogramDataset.addSeries(histName, pixelValues, 255, 0.0, 255);
 		
 		//Title and axis names
 		String plotTitle = histName; 
@@ -855,9 +1176,9 @@ public class Menu {
 	    PlotOrientation orientation = PlotOrientation.VERTICAL; 
 	    
 	    //Chart preferences
-	    boolean show = false; 
-	    boolean toolTips = false;
-	    boolean urls = false; 
+	    boolean show = true; 
+	    boolean toolTips = true;
+	    boolean urls = true; 
 	     
 	    //Chart creating with settings
 	    JFreeChart chart = ChartFactory.createHistogram( plotTitle, xaxis, yaxis, 
@@ -865,8 +1186,50 @@ public class Menu {
 		
 	    //Chartframe settings
 	    ChartFrame frame=new ChartFrame(histName, chart);
-	    frame.setSize(600, 500);
+	    frame.setBounds(100,100,600,500);
 	    frame.setVisible(true);
+	    frame.addWindowListener(new WindowListener() {
+			
+			@Override
+			public void windowOpened(WindowEvent e) {
+				Menu.this.frame.setEnabled(false);
+			}
+			
+			@Override
+			public void windowIconified(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowDeiconified(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowDeactivated(WindowEvent e) {
+				// TODO Auto-generated method stub
+			}
+			
+			@Override
+			public void windowClosing(WindowEvent e) {
+				// TODO Auto-generated method 
+				Menu.this.frame.setEnabled(true);		
+			}
+			
+			@Override
+			public void windowClosed(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowActivated(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});;
 	}
 
 	
@@ -919,17 +1282,208 @@ public class Menu {
  		return grayImage;
  	}
  	
- 	public BufferedImage setBrightness(BufferedImage img,int amountOfBrightness) {
+ 	public BufferedImage setBrightness(BufferedImage img,int amountOfBrightness) {	
+ 		
+ 		BufferedImage imgBright=new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
+ 		
  		for(int i=0;i<img.getWidth();i++) {
  			
  			for(int j=0;j<img.getHeight();j++) {
- 				int currPixelValue=img.getRGB(i, j);
+ 				Color currentCol=new Color(img.getRGB(i, j));
  				
- 				img.setRGB(i, j, currPixelValue+toRGB(amountOfBrightness));
+ 				int R,G,B;
+ 				R=(currentCol.getRed()+amountOfBrightness<255) ? currentCol.getRed()+amountOfBrightness:255;
+ 				R=(R<0)?0:R;
+ 				G=(currentCol.getGreen()+amountOfBrightness<255) ? currentCol.getGreen()+amountOfBrightness:255;
+ 				G=(G<0)?0:G;
+ 				B=(currentCol.getBlue()+amountOfBrightness<255) ? currentCol.getBlue()+amountOfBrightness:255;
+ 				B=(B<0)?0:B;
+ 				
+ 				
+ 				imgBright.setRGB(i, j, new Color(R,G,B).getRGB());
  				
  			}
  		}
  		
- 		return img;
+ 		return imgBright;
+ 	}
+ 	
+ 	
+ 	public void service(int whichService) {
+ 		
+ 		Filter filter;
+ 		long ms_start=System.currentTimeMillis();
+ 			//Create a case every image process
+			switch (whichService) {
+			
+			case 0: {
+				img_out=imgToGray(img_in);
+				lbl_img_out.setIcon(new ImageIcon(img_out));
+				break;
+			}
+			case 1: {
+				img_out=setBrightness(img_in, slider_brightness.getValue());
+				lbl_img_out.setIcon(new ImageIcon(img_out));
+				break;
+			}
+			case 2: {
+				img_out=thresholdImage(img_in, (Integer) spn_threshold.getValue());
+				lbl_img_out.setIcon(new ImageIcon(img_out));
+				break;
+			}
+			case 3: {
+				img_out=imgToNegative(img_in);
+				lbl_img_out.setIcon(new ImageIcon(img_out));
+				break;
+			}
+			case 4: {
+				//kontrast ayarlama
+			}
+			case 5: {
+				img_out=stretchContrast(img_in, (Integer) spn_upbound.getValue());
+				lbl_img_out.setIcon(new ImageIcon(img_out));
+				break;
+			}
+			case 6: {
+				img_out=histogramEq(img_in, (Integer) spn_eqFactor.getValue());
+				lbl_img_out.setIcon(new ImageIcon(img_out));
+				break;
+			}
+			case 7: {
+				img_out=Geo.invertX(img_in);
+				lbl_img_out.setIcon(new ImageIcon(img_out));
+				break;
+			}
+			case 8: {
+				img_out=Geo.invertY(img_in);
+				lbl_img_out.setIcon(new ImageIcon(img_out));
+				break;
+			}
+			case 9: {
+				img_out=Geo.setOffSet(img_in,(Integer) spn_offsetX.getValue(),(Integer) spn_offsetY.getValue());
+				lbl_img_out.setIcon(new ImageIcon(img_out));
+				break;
+			}
+			case 10: {
+				img_out=Geo.rotate(img_in,(Integer) spn_angle.getValue());
+				lbl_img_out.setIcon(new ImageIcon(img_out));
+				break;
+			}
+			case 11: {
+				//Zoom in
+				break;
+			}
+			case 12: {
+				//Zoom out
+				break;
+			}
+			case 13: {
+				int format=(Integer) spn_lowformat.getValue();
+
+				switch (cb_lowflter.getSelectedIndex()) {
+					//Gauss Selected
+					case 0: {	
+						filter=new GaussFilter(format);
+						img_out=filter.applyFilter(img_in);
+						lbl_img_out.setIcon(new ImageIcon(img_out));
+						break;
+					}
+					
+					//Mean Selected
+					case 1:{
+						//applyFilter func implement in Filter.class!!!!
+						filter=new Filter(format);
+						img_out=filter.applyFilter(img_in);
+						lbl_img_out.setIcon(new ImageIcon(img_out));
+						break;
+					}
+					
+					//Median Selected
+					case 2:{
+						filter=new MedianFilter(format);
+						img_out=filter.applyFilter(img_in);
+						lbl_img_out.setIcon(new ImageIcon(img_out));
+						break;
+					}
+				}
+				break;
+			}
+			case 14: {
+				
+			}
+			case 15: {
+				
+			}
+			case 16: {
+				switch (cb_highfilter.getSelectedIndex()) {
+					//Laplace Selected
+					case 0: {	
+						filter=new LaplaceFilter();
+						img_out=filter.applyFilter(img_in);
+						lbl_img_out.setIcon(new ImageIcon(img_out));
+						break;
+					}
+					
+					//Sobel Selected
+					case 1:{
+						filter=new HighFilter(HighFilter.SOBEL_KERNEL);
+						img_out=filter.applyFilter(img_in);
+						lbl_img_out.setIcon(new ImageIcon(img_out));
+						break;
+					}
+					
+					//Prewitt Selected
+					case 2:{
+						filter=new HighFilter(HighFilter.PREWITT_KERNEL);
+						img_out=filter.applyFilter(img_in);
+						lbl_img_out.setIcon(new ImageIcon(img_out));
+						break;
+					}
+				}
+				break;
+			}
+			case 17: {
+				break;
+			}
+			case 18: {
+				break;
+			}
+			case 19: {
+				img_out=Morp.dilate(img_in,Morp.DEFAULT_KERNEL);
+				lbl_img_out.setIcon(new ImageIcon(img_out));
+				break;
+				
+			}
+			case 20: {
+				img_out=Morp.erode(img_in,Morp.DEFAULT_KERNEL);
+				lbl_img_out.setIcon(new ImageIcon(img_out));
+				break;
+				
+			}
+			case 21: {
+				img_out=Morp.open(img_in,Morp.DEFAULT_KERNEL);
+				lbl_img_out.setIcon(new ImageIcon(img_out));
+				break;
+			}
+			case 22: {
+				img_out=Morp.close(img_in,Morp.DEFAULT_KERNEL);
+				lbl_img_out.setIcon(new ImageIcon(img_out));
+				break;
+			}
+			case 23: {
+
+			}
+			
+			case 24: {
+				filter=new Sharp(Sharp.DEFAULT_KERNEL);
+				img_out=filter.applyFilter(img_in);
+				lbl_img_out.setIcon(new ImageIcon(img_out));
+				break;
+			}
+			
+			}
+			long ms_stop=System.currentTimeMillis();
+			
+			
  	}
 }

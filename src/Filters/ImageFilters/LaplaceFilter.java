@@ -19,6 +19,8 @@ public class LaplaceFilter extends Filter{
 	@Override
 	public BufferedImage applyFilter(BufferedImage img) {
 
+		BufferedImage imgLaplace=new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
+		
 		int [][] grayScale=getGrayValues(img);
 		
 		int w=img.getWidth();
@@ -39,12 +41,12 @@ public class LaplaceFilter extends Filter{
 				else if(sum>255)
 					sum=255;
 				
-				img.setRGB(x, y, toRGB(sum));
+				imgLaplace.setRGB(x, y, toRGB(sum));
 				
 			}
 		}
 		
-		return img;
+		return imgLaplace;
 	}	
 
 }
