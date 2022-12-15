@@ -18,6 +18,14 @@ import org.jfree.chart.ChartFrame;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.statistics.HistogramDataset;
+
+import com.formdev.flatlaf.FlatDarculaLaf;
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatDefaultsAddon;
+import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.FlatPropertiesLaf;
+
 import Filters.Filter;
 import Filters.ImageFilters.GaussFilter;
 import Filters.ImageFilters.HighFilter;
@@ -37,7 +45,6 @@ import java.awt.Image;
 import java.awt.SystemColor;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.JTabbedPane;
-import javax.swing.border.EtchedBorder;
 import javax.swing.JSpinner;
 import javax.swing.JRadioButton;
 import javax.swing.border.TitledBorder;
@@ -52,6 +59,8 @@ import java.awt.event.WindowListener;
 import java.awt.event.ActionEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+import javax.swing.border.CompoundBorder;
+import javax.swing.UIManager;
 
 public class Menu {
 
@@ -101,6 +110,7 @@ public class Menu {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		FlatDarkLaf.setup();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -131,7 +141,7 @@ public class Menu {
 		
 		//......................MAIN-PANEL.....................
 		JPanel panel = new JPanel();
-		panel.setBackground(SystemColor.textInactiveText);
+		panel.setBackground(Color.DARK_GRAY);
 		panel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
 		panel.setLayout(null);
@@ -140,31 +150,32 @@ public class Menu {
 			panel_images = new JPanel();
 			panel_images.setName("");
 			panel_images.setBackground(SystemColor.desktop);
-			panel_images.setBorder(new LineBorder(new Color(153, 180, 209), 3, true));
+			panel_images.setBorder(new LineBorder(SystemColor.activeCaptionBorder, 2, true));
 			panel_images.setBounds(10, 25, 1050, 525);
 			panel.add(panel_images);
 			panel_images.setLayout(null);
 			
 			lbl_img_in = new JLabel("");
-			lbl_img_in.setBorder(new LineBorder(SystemColor.activeCaption, 3));
+			lbl_img_in.setBorder(new CompoundBorder(new LineBorder(new Color(160, 160, 160), 2, true), new LineBorder(new Color(180, 180, 180), 2, true)));
 			lbl_img_in.setBounds(30, 30, 474, 474);
 			panel_images.add(lbl_img_in);
 			
 			lbl_img_out = new JLabel("");
-			lbl_img_out.setBorder(new LineBorder(SystemColor.activeCaption, 3));
+			lbl_img_out.setBorder(new CompoundBorder(new LineBorder(new Color(160, 160, 160), 2, true), new LineBorder(new Color(180, 180, 180), 2, true)));
 			lbl_img_out.setBounds(538, 30, 474, 474);
 			panel_images.add(lbl_img_out);
 
 		
 			//......................IMAGE-ACTION-PANEL.....................
 			JPanel panel_image_actions = new JPanel();
-			panel_image_actions.setBackground(SystemColor.controlShadow);
-			panel_image_actions.setBorder(new LineBorder(SystemColor.activeCaption, 3, true));
+			panel_image_actions.setBackground(Color.DARK_GRAY);
+			panel_image_actions.setBorder(new LineBorder(SystemColor.activeCaptionBorder, 2, true));
 			panel_image_actions.setBounds(10, 570, 1050, 146);
 			panel.add(panel_image_actions);
 			panel_image_actions.setLayout(null);
 			
 			JButton btn_histogram_in = new JButton("Histogram");
+			btn_histogram_in.setForeground(Color.WHITE);
 			btn_histogram_in.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					
@@ -175,12 +186,13 @@ public class Menu {
 					}
 				}
 			});
-			btn_histogram_in.setBackground(new Color(255, 239, 213));
+			btn_histogram_in.setBackground(new Color(0, 0, 139));
 			btn_histogram_in.setFont(new Font("Monospaced", Font.BOLD, 15));
 			btn_histogram_in.setBounds(159, 25, 199, 29);
 			panel_image_actions.add(btn_histogram_in);
 			
 			JButton btn_histogram_out = new JButton("Histogram");
+			btn_histogram_out.setForeground(Color.WHITE);
 			btn_histogram_out.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if(img_out!=null)
@@ -190,7 +202,7 @@ public class Menu {
 					}
 				}
 			});
-			btn_histogram_out.setBackground(new Color(255, 239, 213));
+			btn_histogram_out.setBackground(new Color(0, 0, 139));
 			btn_histogram_out.setFont(new Font("Monospaced", Font.BOLD, 15));
 			btn_histogram_out.setBounds(657, 25, 199, 29);
 			panel_image_actions.add(btn_histogram_out);
@@ -240,6 +252,7 @@ public class Menu {
 			panel_image_actions.add(btn_import);
 			
 			JButton btn_saveas = new JButton("Save as...");
+			btn_saveas.setForeground(Color.WHITE);
 			btn_saveas.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					
@@ -283,34 +296,33 @@ public class Menu {
 			btn_apply.setBounds(429, 49, 158, 29);
 			panel_image_actions.add(btn_apply);
 			
-			JButton btn_clear = new JButton("Clear All");
-			btn_clear.setFont(new Font("Monospaced", Font.BOLD, 15));
-			btn_clear.setBackground(Color.WHITE);
-			btn_clear.setBounds(429, 86, 158, 29);
-			panel_image_actions.add(btn_clear);
-			
 			JPanel panel_image_processes = new JPanel();
-			panel_image_processes.setBackground(SystemColor.controlDkShadow);
-			panel_image_processes.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
+			panel_image_processes.setBackground(Color.DARK_GRAY);
+			panel_image_processes.setBorder(new LineBorder(SystemColor.activeCaptionBorder, 2, true));
 			panel_image_processes.setBounds(1084, 25, 355, 691);
 			panel.add(panel_image_processes);
 			panel_image_processes.setLayout(null);
 			
 			//......................PANE-1........................
 			JTabbedPane tabbedPane1 = new JTabbedPane(JTabbedPane.TOP);
+			tabbedPane1.setForeground(new Color(0, 0, 139));
+			tabbedPane1.setFont(UIManager.getFont("TabbedPane.font"));
+			tabbedPane1.setToolTipText("");
+			tabbedPane1.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 			tabbedPane1.setBackground(Color.WHITE);
-			tabbedPane1.setBounds(10, 0, 335, 331);
+			tabbedPane1.setBounds(0, 0, 355, 350);
 			panel_image_processes.add(tabbedPane1);
 			
 			//..................DOTTED PROCESS...................
 			JPanel panel_dottedprocess = new JPanel();
-			panel_dottedprocess.setBackground(SystemColor.controlShadow);
+			panel_dottedprocess.setBorder(new LineBorder(SystemColor.activeCaptionBorder, 2, true));
+			panel_dottedprocess.setBackground(Color.DARK_GRAY);
 			tabbedPane1.addTab("Dotted", null, panel_dottedprocess, null);
 			panel_dottedprocess.setLayout(null);
 			
 				JPanel panel_rgbtogray = new JPanel();
-				panel_rgbtogray.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-				panel_rgbtogray.setBounds(8, 20, 314, 55);
+				panel_rgbtogray.setBorder(new LineBorder(SystemColor.activeCaptionBorder, 1, true));
+				panel_rgbtogray.setBounds(18, 20, 314, 55);
 				panel_dottedprocess.add(panel_rgbtogray);
 				panel_rgbtogray.setLayout(null);
 				
@@ -328,8 +340,8 @@ public class Menu {
 				//.......................BRIGHTNESS.......................
 				JPanel panel_setbrightness = new JPanel();
 				panel_setbrightness.setLayout(null);
-				panel_setbrightness.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-				panel_setbrightness.setBounds(8, 93, 314, 60);
+				panel_setbrightness.setBorder(new LineBorder(SystemColor.activeCaptionBorder, 1, true));
+				panel_setbrightness.setBounds(18, 85, 314, 68);
 				panel_dottedprocess.add(panel_setbrightness);
 				
 				slider_brightness = new JSlider();
@@ -369,13 +381,13 @@ public class Menu {
 				//.......................THRESHOLD.......................
 				JPanel panel_threshold = new JPanel();
 				panel_threshold.setLayout(null);
-				panel_threshold.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-				panel_threshold.setBounds(8, 166, 314, 55);
+				panel_threshold.setBorder(new LineBorder(SystemColor.activeCaptionBorder, 1, true));
+				panel_threshold.setBounds(18, 166, 314, 55);
 				panel_dottedprocess.add(panel_threshold);
 				
 				spn_threshold = new JSpinner(new SpinnerNumberModel(0,0,255,1));
 				spn_threshold.setEnabled(false);
-				spn_threshold.setBounds(240, 16, 66, 28);
+				spn_threshold.setBounds(240, 17, 66, 28);
 				panel_threshold.add(spn_threshold);
 				
 				JRadioButton rd_btn_threshold = new JRadioButton("Threshold");
@@ -397,8 +409,8 @@ public class Menu {
 				//.......................NEGATIVE.......................
 				JPanel panel_negative = new JPanel();
 				panel_negative.setLayout(null);
-				panel_negative.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-				panel_negative.setBounds(8, 239, 314, 55);
+				panel_negative.setBorder(new LineBorder(SystemColor.activeCaptionBorder, 1, true));
+				panel_negative.setBounds(18, 231, 314, 55);
 				panel_dottedprocess.add(panel_negative);
 				
 				JRadioButton rd_btn_negative = new JRadioButton("Negative");
@@ -414,7 +426,8 @@ public class Menu {
 			
 			//.......................CONTRAST-PROCESS.......................
 			JPanel panel_contrastprocess = new JPanel();
-			panel_contrastprocess.setBackground(SystemColor.controlShadow);
+			panel_contrastprocess.setBorder(new LineBorder(SystemColor.activeCaptionBorder, 2, true));
+			panel_contrastprocess.setBackground(Color.DARK_GRAY);
 			tabbedPane1.addTab("Contrast", null, panel_contrastprocess, null);
 			panel_contrastprocess.setLayout(null);
 			
@@ -422,7 +435,7 @@ public class Menu {
 				JPanel panel_setcontrast = new JPanel();
 				panel_setcontrast.setLayout(null);
 				panel_setcontrast.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-				panel_setcontrast.setBounds(8, 20, 314, 60);
+				panel_setcontrast.setBounds(18, 20, 314, 60);
 				panel_contrastprocess.add(panel_setcontrast);
 				
 					Hashtable<Integer,JLabel> contPos = new Hashtable<Integer,JLabel>();
@@ -462,7 +475,7 @@ public class Menu {
 				JPanel panel_stretchsontrast = new JPanel();
 				panel_stretchsontrast.setLayout(null);
 				panel_stretchsontrast.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-				panel_stretchsontrast.setBounds(8, 93, 314, 75);
+				panel_stretchsontrast.setBounds(18, 93, 314, 75);
 				panel_contrastprocess.add(panel_stretchsontrast);
 				
 					spn_upbound = new JSpinner(new SpinnerNumberModel(0,0,255,1));
@@ -495,7 +508,7 @@ public class Menu {
 				JPanel panel_histogrameq = new JPanel();
 				panel_histogrameq.setLayout(null);
 				panel_histogrameq.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-				panel_histogrameq.setBounds(8, 185, 314, 75);
+				panel_histogrameq.setBounds(18, 185, 314, 75);
 				panel_contrastprocess.add(panel_histogrameq);
 				
 					JRadioButton rd_btn_histogrameq = new JRadioButton("Histogram Equalization");
@@ -523,14 +536,15 @@ public class Menu {
 			
 			//.......................GEOMETRIC.......................
 			JPanel panel_geometric = new JPanel();
-			panel_geometric.setBackground(SystemColor.controlShadow);
+			panel_geometric.setBorder(new LineBorder(SystemColor.activeCaptionBorder, 2, true));
+			panel_geometric.setBackground(Color.DARK_GRAY);
 			tabbedPane1.addTab("Geometric", null, panel_geometric, null);
 			panel_geometric.setLayout(null);
 			
 				JPanel panel_invert = new JPanel();
 				panel_invert.setLayout(null);
 				panel_invert.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-				panel_invert.setBounds(8, 10, 314, 55);
+				panel_invert.setBounds(18, 10, 314, 55);
 				panel_geometric.add(panel_invert);
 				
 					JRadioButton rd_btn_invertX = new JRadioButton("Invert-X");
@@ -559,7 +573,7 @@ public class Menu {
 				JPanel panel_offset = new JPanel();
 				panel_offset.setLayout(null);
 				panel_offset.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-				panel_offset.setBounds(8, 83, 314, 60);
+				panel_offset.setBounds(18, 83, 314, 60);
 				panel_geometric.add(panel_offset);
 				
 
@@ -597,7 +611,7 @@ public class Menu {
 				JPanel panel_rotate= new JPanel();
 				panel_rotate.setLayout(null);
 				panel_rotate.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-				panel_rotate.setBounds(8, 156, 314, 55);
+				panel_rotate.setBounds(18, 156, 314, 55);
 				panel_geometric.add(panel_rotate);
 				
 					spn_angle = new JSpinner(new SpinnerNumberModel());
@@ -624,7 +638,7 @@ public class Menu {
 				JPanel panel_scale = new JPanel();
 				panel_scale.setLayout(null);
 				panel_scale.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-				panel_scale.setBounds(8, 229, 314, 55);
+				panel_scale.setBounds(18, 229, 314, 55);
 				panel_geometric.add(panel_scale);
 				
 					JRadioButton rd_btn_scale = new JRadioButton("Scale");
@@ -642,7 +656,7 @@ public class Menu {
 					spn_scaleX.setBounds(164, 25, 51, 20);
 					panel_scale.add(spn_scaleX);
 					
-					spn_scaleY = new JSpinner(new SpinnerNumberModel(1,1,2160,10));
+					spn_scaleY = 	new JSpinner(new SpinnerNumberModel(1,1,2160,10));
 					spn_scaleY.setBounds(255, 25, 51, 20);
 					panel_scale.add(spn_scaleY);
 					
@@ -654,21 +668,24 @@ public class Menu {
 					
 			//......................PANE-2........................
 			JTabbedPane tabbedPane2 = new JTabbedPane(JTabbedPane.TOP);
+			tabbedPane2.setForeground(new Color(0, 0, 139));
+			tabbedPane2.setFont(UIManager.getFont("TabbedPane.font"));
 			tabbedPane2.setBackground(Color.WHITE);
-			tabbedPane2.setBounds(10, 350, 335, 331);
+			tabbedPane2.setBounds(0, 350, 355, 342);
 			panel_image_processes.add(tabbedPane2);
 				
 				//......................FILTERS........................
 				JPanel panel_filters = new JPanel();
-				panel_filters.setBackground(SystemColor.controlShadow);
+				panel_filters.setBorder(new LineBorder(SystemColor.activeCaptionBorder, 2, true));
+				panel_filters.setBackground(Color.DARK_GRAY);
 				tabbedPane2.addTab("Filters", null, panel_filters, null);
 				panel_filters.setLayout(null);
 				
 					//......................LOW-FILTERS........................
 					JPanel panel_lowfilter = new JPanel();
 					panel_lowfilter.setLayout(null);
-					panel_lowfilter.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-					panel_lowfilter.setBounds(8, 33, 314, 96);
+					panel_lowfilter.setBorder(new LineBorder(SystemColor.activeCaptionBorder, 1, true));
+					panel_lowfilter.setBounds(18, 33, 314, 96);
 					panel_filters.add(panel_lowfilter);
 						
 						
@@ -711,8 +728,8 @@ public class Menu {
 					//......................HIGH-FILTERS........................
 					JPanel panel_highfilter = new JPanel();
 					panel_highfilter.setLayout(null);
-					panel_highfilter.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-					panel_highfilter.setBounds(8, 180, 314, 60);
+					panel_highfilter.setBorder(new LineBorder(SystemColor.activeCaptionBorder, 1, true));
+					panel_highfilter.setBounds(18, 180, 314, 60);
 					panel_filters.add(panel_highfilter);
 					
 					
@@ -743,7 +760,8 @@ public class Menu {
 				
 				//......................MORPHOLOGY........................
 				JPanel panel_morphology = new JPanel();
-				panel_morphology.setBackground(SystemColor.controlShadow);
+				panel_morphology.setBorder(new LineBorder(SystemColor.activeCaptionBorder, 2, true));
+				panel_morphology.setBackground(Color.DARK_GRAY);
 				tabbedPane2.addTab("Morphology", null, panel_morphology, null);
 				panel_morphology.setLayout(null);
 				
@@ -751,7 +769,7 @@ public class Menu {
 					JPanel panel_dilate = new JPanel();
 					panel_dilate.setLayout(null);
 					panel_dilate.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-					panel_dilate.setBounds(8, 10, 314, 55);
+					panel_dilate.setBounds(18, 10, 314, 55);
 					panel_morphology.add(panel_dilate);
 					
 						JRadioButton rd_btn_dilate = new JRadioButton("Dilation");
@@ -769,7 +787,7 @@ public class Menu {
 					JPanel panel_erode = new JPanel();
 					panel_erode.setLayout(null);
 					panel_erode.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-					panel_erode.setBounds(8, 83, 314, 60);
+					panel_erode.setBounds(18, 83, 314, 60);
 					panel_morphology.add(panel_erode);
 					
 						JRadioButton rd_btn_eroding = new JRadioButton("Eroding");
@@ -787,7 +805,7 @@ public class Menu {
 					JPanel panel_open = new JPanel();
 					panel_open.setLayout(null);
 					panel_open.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-					panel_open.setBounds(8, 156, 314, 55);
+					panel_open.setBounds(18, 156, 314, 55);
 					panel_morphology.add(panel_open);
 					
 						JRadioButton rd_btn_opening = new JRadioButton("Open");
@@ -805,7 +823,7 @@ public class Menu {
 					JPanel panel_close = new JPanel();
 					panel_close.setLayout(null);
 					panel_close.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-					panel_close.setBounds(8, 229, 314, 55);
+					panel_close.setBounds(18, 229, 314, 55);
 					panel_morphology.add(panel_close);
 					
 						JRadioButton rd_btn_closing = new JRadioButton("Close");
@@ -821,7 +839,8 @@ public class Menu {
 				
 				//......................EXTRAS........................
 				JPanel panel_extras = new JPanel();
-				panel_extras.setBackground(SystemColor.controlShadow);
+				panel_extras.setBorder(new LineBorder(SystemColor.activeCaptionBorder, 2, true));
+				panel_extras.setBackground(Color.DARK_GRAY);
 				tabbedPane2.addTab("Extras", null, panel_extras, null);
 				panel_extras.setLayout(null);
 					
@@ -829,7 +848,7 @@ public class Menu {
 					JPanel panel_perspectivetransform = new JPanel();
 					panel_perspectivetransform.setLayout(null);
 					panel_perspectivetransform.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-					panel_perspectivetransform.setBounds(8, 10, 314, 219);
+					panel_perspectivetransform.setBounds(18, 10, 314, 219);
 					panel_extras.add(panel_perspectivetransform);
 						JPanel panel_coordinates = new JPanel();
 						panel_coordinates.setEnabled(false);
@@ -960,7 +979,7 @@ public class Menu {
 					JPanel panel_sharpeningbyconv = new JPanel();
 					panel_sharpeningbyconv.setLayout(null);
 					panel_sharpeningbyconv.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-					panel_sharpeningbyconv.setBounds(8, 239, 314, 55);
+					panel_sharpeningbyconv.setBounds(18, 239, 314, 55);
 					panel_extras.add(panel_sharpeningbyconv);
 					
 					JRadioButton rd_btn_sharpeningbyconv = new JRadioButton("Sharpening by Convolution");
