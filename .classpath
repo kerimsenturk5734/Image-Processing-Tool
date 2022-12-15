@@ -18,5 +18,6 @@
 	<classpathentry kind="lib" path="lib/servlet.jar"/>
 	<classpathentry kind="lib" path="lib/swtgraphics2d.jar"/>
 	<classpathentry kind="lib" path="lib/Jama-1.0.3.jar"/>
+	<classpathentry kind="lib" path="lib/flatlaf-2.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
