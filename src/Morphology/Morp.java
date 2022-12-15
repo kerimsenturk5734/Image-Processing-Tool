@@ -1,8 +1,6 @@
 package Morphology;
 
 import java.awt.image.BufferedImage;
-import java.util.Collections;
-
 import Filters.Filter;
 
 public class Morp {

@@ -2,8 +2,6 @@ package Geometric;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-
 import Jama.Matrix;
 
 public class Geo {
@@ -107,7 +105,7 @@ public class Geo {
 	}
 	
 
-	public static BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) throws IOException {
+	public static BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight)  {
 	    BufferedImage resizedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_RGB);
 	    Graphics2D graphics2D = resizedImage.createGraphics();
 	    graphics2D.drawImage(originalImage, 0, 0, targetWidth, targetHeight, null);
@@ -155,11 +153,11 @@ public class Geo {
 			
 			for(int y=0;y<img.getHeight();y++) {
 				
-				int z=(int)(A.get(6, 0)*x+A.get(7, 0)*y+1);
+				int z=(int)Math.round(A.get(6, 0)*x+A.get(7, 0)*y+1);
 				//System.out.println(A.get(6, 0)+"|"+x+"|"+A.get(7,0)+"|"+y);
 				//System.out.println(A.get(0, 0)+"|"+x+"|"+A.get(1,0)+"|"+y+"|"+A.get(2, 0)+"|"+z);
-				int outX=(int)((A.get(0, 0)*x+A.get(1,0)*y+A.get(2, 0))/z);
-				int outY=(int)((A.get(3, 0)*x+A.get(4,0)*y+A.get(5, 0))/z);
+				int outX=(int)Math.round((A.get(0, 0)*x+A.get(1,0)*y+A.get(2, 0))/z);
+				int outY=(int)Math.round((A.get(3, 0)*x+A.get(4,0)*y+A.get(5, 0))/z);
 				
 				//Set img pixel
 				//System.out.println(outX+" "+outY+"\n");

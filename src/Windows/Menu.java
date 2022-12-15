@@ -65,6 +65,7 @@ public class Menu {
 	
 	//............Components............
 	JSlider slider_brightness;
+	JRadioButton rd_btn_setbrightness;
 	JSpinner spn_threshold;
 	JSlider slider_contrast;
 	JSpinner spn_upbound;
@@ -89,6 +90,8 @@ public class Menu {
 	JSpinner spn_Y3;
 	JSpinner spn_X4;
 	JSpinner spn_Y4;
+	JSpinner spn_scaleX;
+	JSpinner spn_scaleY; 
 	JLabel lbl_img_in;
 	JLabel lbl_img_out;
 	JComboBox<Object> cb_lowflter;
@@ -336,7 +339,7 @@ public class Menu {
 				slider_brightness.setMaximum(127);
 				slider_brightness.setBounds(123, 8, 178, 45);
 				
-				JRadioButton rd_btn_setbrightness = new JRadioButton("Brightness");
+				rd_btn_setbrightness = new JRadioButton("Brightness");
 				rd_btn_setbrightness.addChangeListener(new ChangeListener() {
 					public void stateChanged(ChangeEvent e) {
 						slider_brightness.setEnabled(rd_btn_setbrightness.isSelected());
@@ -422,14 +425,21 @@ public class Menu {
 				panel_setcontrast.setBounds(8, 20, 314, 60);
 				panel_contrastprocess.add(panel_setcontrast);
 				
+					Hashtable<Integer,JLabel> contPos = new Hashtable<Integer,JLabel>();
+					contPos.put(-255, new JLabel("-255"));
+					contPos.put(-127, new JLabel("-127"));
+					contPos.put(0, new JLabel("0"));
+					contPos.put(127, new JLabel("127"));
+					contPos.put(255, new JLabel("255"));
+					
 					slider_contrast = new JSlider();
 					slider_contrast.setEnabled(false);
 					slider_contrast.setValue(0);
 					slider_contrast.setPaintLabels(true);
-					slider_contrast.setMinimum(-128);
-					slider_contrast.setMaximum(127);
+					slider_contrast.setMinimum(-255);
+					slider_contrast.setMaximum(255);
 					slider_contrast.setBounds(120, 8, 178, 45);
-					slider_contrast.setLabelTable(position);
+					slider_contrast.setLabelTable(contPos);
 					slider_brightness.setPaintLabels(true);
 					panel_setcontrast.add(slider_contrast);
 					
@@ -498,7 +508,7 @@ public class Menu {
 						}
 					});
 					rdbGroup.add(rd_btn_histogrameq);
-					rd_btn_histogrameq.setBounds(15, 27, 155, 21);
+					rd_btn_histogrameq.setBounds(15, 27, 196, 21);
 					panel_histogrameq.add(rd_btn_histogrameq);
 					
 					spn_eqFactor = new JSpinner(new SpinnerNumberModel(0,0,255,1));
@@ -617,28 +627,29 @@ public class Menu {
 				panel_scale.setBounds(8, 229, 314, 55);
 				panel_geometric.add(panel_scale);
 				
-					JRadioButton rd_btn_zoomin = new JRadioButton("Zoom In");
-					rd_btn_zoomin.addChangeListener(new ChangeListener() {
+					JRadioButton rd_btn_scale = new JRadioButton("Scale");
+					rd_btn_scale.addChangeListener(new ChangeListener() {
 						public void stateChanged(ChangeEvent e) {
-							if(rd_btn_zoomin.isSelected())
+							if(rd_btn_scale.isSelected())
 								serviceNumber=11;
 						}
 					});
-					rdbGroup.add(rd_btn_zoomin);
-					rd_btn_zoomin.setBounds(20, 15, 104, 21);
-					panel_scale.add(rd_btn_zoomin);
+					rdbGroup.add(rd_btn_scale);
+					rd_btn_scale.setBounds(20, 15, 88, 21);
+					panel_scale.add(rd_btn_scale);
 					
-					JRadioButton rd_btn_zoomout = new JRadioButton("Zoom Out");
-					rd_btn_zoomout.addChangeListener(new ChangeListener() {
-						public void stateChanged(ChangeEvent e) {
-							
-							if(rd_btn_zoomout.isSelected())
-								serviceNumber=12;
-						}
-					});
-					rdbGroup.add(rd_btn_zoomout);
-					rd_btn_zoomout.setBounds(181, 15, 115, 21);
-					panel_scale.add(rd_btn_zoomout);
+					spn_scaleX = new JSpinner(new SpinnerNumberModel(1,1,4096,10));
+					spn_scaleX.setBounds(164, 25, 51, 20);
+					panel_scale.add(spn_scaleX);
+					
+					spn_scaleY = new JSpinner(new SpinnerNumberModel(1,1,2160,10));
+					spn_scaleY.setBounds(255, 25, 51, 20);
+					panel_scale.add(spn_scaleY);
+					
+					JLabel lbl_offset_1 = new JLabel("X          Y");
+					lbl_offset_1.setFont(new Font("Monospaced", Font.PLAIN, 11));
+					lbl_offset_1.setBounds(190, 10, 101, 13);
+					panel_scale.add(lbl_offset_1);
 			
 					
 			//......................PANE-2........................
@@ -692,7 +703,7 @@ public class Menu {
 						panel_lowfilter.add(spn_lowformat);
 						
 						JLabel lblNewLabel_1 = new JLabel("Format:");
-						lblNewLabel_1.setBounds(230, 43, 40, 13);
+						lblNewLabel_1.setBounds(230, 43, 68, 13);
 						panel_lowfilter.add(lblNewLabel_1);
 						
 						
@@ -1287,6 +1298,45 @@ public class Menu {
  		return imgBright;
  	}
  	
+ 	public BufferedImage adjustContrast(BufferedImage image, int contrast) {
+		int R = 0, G = 0, B = 0;
+		Color color, color2;
+		BufferedImage image2 = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		double c = contrast;
+		double f = (259 * (c + 255)) / (255 * (259 - c));
+		for (int x = 0; x < image.getWidth(); x++) {
+			for (int y = 0; y < image.getHeight(); y++) {
+				color = new Color(image.getRGB(x, y));
+				R = color.getRed();
+				G = color.getGreen();
+				B = color.getBlue();
+				R = (int) ((f * (R - 128)) + 128);
+				G = (int) ((f * (G - 128)) + 128);
+				B = (int) ((f * (B - 128)) + 128);
+				if (R > 255) {
+					R = 255;
+				}
+				if (G > 255) {
+					G = 255;
+				}
+				if (B > 255) {
+					B = 255;
+				}
+				if (R < 0) {
+					R = 0;
+				}
+				if (G < 0) {
+					G = 0;
+				}
+				if (B < 0) {
+					B = 0;
+				}
+				color2 = new Color(R, G, B);
+				image2.setRGB(x, y, color2.getRGB());
+			}
+		}
+		return image2;
+	}
  	
  	public void service(int whichService) {
  		
@@ -1316,7 +1366,9 @@ public class Menu {
 				break;
 			}
 			case 4: {
-				//kontrast ayarlama
+				img_out=adjustContrast(img_in,slider_contrast.getValue());
+				lbl_img_out.setIcon(new ImageIcon(img_out));
+				break;
 			}
 			case 5: {
 				img_out=stretchContrast(img_in, (Integer) spn_upbound.getValue());
@@ -1349,7 +1401,8 @@ public class Menu {
 				break;
 			}
 			case 11: {
-				//Zoom in
+				img_out=Geo.resizeImage(img_in,(Integer)spn_scaleX.getValue(),(Integer)spn_scaleY.getValue());
+				lbl_img_out.setIcon(new ImageIcon(img_out));
 				break;
 			}
 			case 12: {
@@ -1450,7 +1503,18 @@ public class Menu {
 				break;
 			}
 			case 23: {
-
+				img_out=Geo.transformPerspective(img_in,
+						(Integer)spn_x1.getValue(), (Integer)spn_y1.getValue(), 
+						(Integer)spn_x2.getValue(), (Integer)spn_y2.getValue(), 
+						(Integer)spn_x3.getValue(), (Integer)spn_y3.getValue(), 
+						(Integer)spn_x4.getValue(), (Integer)spn_y4.getValue(), 
+						
+						(Integer)spn_X1.getValue(), (Integer)spn_Y1.getValue(), 
+						(Integer)spn_X2.getValue(), (Integer)spn_Y2.getValue(), 
+						(Integer)spn_X3.getValue(), (Integer)spn_Y3.getValue(), 
+						(Integer)spn_X4.getValue(), (Integer)spn_Y4.getValue());
+				lbl_img_out.setIcon(new ImageIcon(img_out));
+				break;
 			}
 			
 			case 24: {
