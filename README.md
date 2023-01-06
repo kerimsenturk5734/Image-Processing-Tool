@@ -139,9 +139,7 @@
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-<kbd>
-  <img src="https://github.com/kerimsenturk5734/Image-Processing-Tool/readmegif.gif">
-</kbd>
+ ![](https://github.com/kerimsenturk5734/Image-Processing-Tool/readmegif.gif)
 
 ### Built With
 
