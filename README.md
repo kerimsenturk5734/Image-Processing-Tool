@@ -137,7 +137,7 @@
   </tr>
 </table>
 
-  <p align="center"><img src="./readmegif.gif" alt="GIF" width="500" height="200"></p>
+  <p align="center"><img src="./readmegif.gif" alt="GIF" width="700" height="400"></p>
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
