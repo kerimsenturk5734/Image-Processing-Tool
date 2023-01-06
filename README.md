@@ -139,7 +139,7 @@
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
- ![](https://github.com/kerimsenturk5734/Image-Processing-Tool/readmegif.gif)
+<img src="./readmegif.gif" alt="GIF" width="500" height="600">
 
 ### Built With
 
