@@ -6,7 +6,7 @@ import Filters.Filter;
 public class Morp {
 	
 	public static int[][] DEFAULT_KERNEL=new int[][] {
-		{255,255,255},{255,0,255},{255,255,255}
+		{255,255,255},{255,255,255},{255,255,255}
 	};
 	
 	public static BufferedImage dilate(BufferedImage img,int[][] kernel) {
@@ -25,7 +25,7 @@ public class Morp {
 
 						for(int j=0;j<kernel[0].length;j++) {
 							//karþýlaþtýrma iþlemini yap
-							if(kernel[i][j]==grayScale[x+i-1][y+i-1] && (kernel[i][j]==255)) {
+							if(kernel[i][j]==255 && kernel[i][j]==grayScale[x+i-1][y+i-1]) {
 								dilatedImg.setRGB(x, y, Filter.toRGB(255));
 								i=kernel.length;
 								break;
@@ -55,9 +55,13 @@ public class Morp {
 
 					for(int j=0;j<kernel[0].length;j++) {
 						//karþýlaþtýrma iþlemini yap
-						if(kernel[i][j]!=grayScale[x+i-1][y+i-1]) {
+						if(kernel[i][j]==1 && kernel[i][j]!=grayScale[x+i-1][y+i-1]) {
 							confirm=false;
+							
+							//to break the other for loop
 							i=kernel.length;
+							
+							//to break this for loop
 							break;
 						}
 					}		
