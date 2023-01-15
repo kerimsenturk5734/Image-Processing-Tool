@@ -38,7 +38,7 @@
     <div>
       ```
         🟥That project developed for midterm grading of "Image Processing" course  in grade 3 term fall.🟥 ```<br>``` 
-        🟥Not used a Image Processing Library like OpenCV.🟥
+        🟥Not used an Image Processing Library like OpenCV.🟥
       ```
     <div/>
     <hr>
