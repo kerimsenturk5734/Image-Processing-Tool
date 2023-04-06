@@ -168,7 +168,7 @@
    ```sh
    git clone https://github.com/kerimsenturk5734/Image-Processing-Tool
    ```
-2. ```File > Import > Install > From Existing Installation```  and select the project folder in Eclipse.
+2. ```File > Import > Install > From Existing Installation```  and select the project folder in Eclipse.(If you use IntelliJ, select eclipse project when importing.)
    
 3. Finish.
   
