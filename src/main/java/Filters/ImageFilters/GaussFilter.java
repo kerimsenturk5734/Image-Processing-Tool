@@ -56,7 +56,7 @@ public class GaussFilter extends Filter {
 
 	@Override
 	protected void createMask() {
-		System.out.println("Gauss Filtresi oluşturuldu");
+		System.out.println("Gauss Filtresi oluï¿½turuldu");
 		//create mask and assign mask to this.mask[][]
 	
 		double sigma = 1;

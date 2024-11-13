@@ -24,7 +24,7 @@ public class Morp {
 					for(int i=0;i<kernel.length;i++) {
 
 						for(int j=0;j<kernel[0].length;j++) {
-							//karþýlaþtýrma iþlemini yap
+							//karï¿½ï¿½laï¿½tï¿½rma iï¿½lemini yap
 							if(kernel[i][j]==255 && kernel[i][j]==grayScale[x+i-1][y+i-1]) {
 								dilatedImg.setRGB(x, y, Filter.toRGB(255));
 								i=kernel.length;
@@ -54,7 +54,7 @@ public class Morp {
 				for(int i=0;i<kernel.length;i++) {
 
 					for(int j=0;j<kernel[0].length;j++) {
-						//karþýlaþtýrma iþlemini yap
+						//karï¿½ï¿½laï¿½tï¿½rma iï¿½lemini yap
 						if(kernel[i][j]==1 && kernel[i][j]!=grayScale[x+i-1][y+i-1]) {
 							confirm=false;
 							

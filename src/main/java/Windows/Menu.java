@@ -189,7 +189,7 @@ public class Menu {
 			btn_histogram_out.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if(img_out!=null)
-						createHistogram(img_out, "Ýþlenmiþ");
+						createHistogram(img_out, "Ä°ÅŸlenmiÅŸ");
 					else {
 						JOptionPane.showMessageDialog(null,"Please import an image.");
 					}
@@ -203,7 +203,7 @@ public class Menu {
 			JButton btn_import = new JButton("Import Image");
 			btn_import.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					JFileChooser j = new JFileChooser("C:\\Users\\kerim\\eclipse-workspace\\ImageProcess");
+					JFileChooser j = new JFileChooser("src/main/resources/static/images");
 					
 					// Get array of available formats
 					String[] suffices = ImageIO.getReaderFileSuffixes();
@@ -256,7 +256,7 @@ public class Menu {
 					g2.drawImage(img, 0, 0, null);
 					g2.dispose();
 					
-					JFileChooser j=new JFileChooser();
+					JFileChooser j=new JFileChooser("src/main/resources/static/images");
 					int userSelection = j.showSaveDialog(frame);
 					if (userSelection == JFileChooser.APPROVE_OPTION) {
 					    try {
