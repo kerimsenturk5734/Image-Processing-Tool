@@ -2,11 +2,11 @@
 <h1>Image Processing Tool</h1>
 
 
-![GitHub Issues](https://img.shields.io/github/issues/kerimsenturk5734/lab-report)
-![GitHub License](https://img.shields.io/github/license/kerimsenturk5734/lab-report)
-![GitHub Pull Requests](https://img.shields.io/github/issues-pr/kerimsenturk5734/lab-report)
-![GitHub Forks](https://img.shields.io/github/forks/kerimsenturk5734/lab-report)
-![GitHub Stars](https://img.shields.io/github/stars/kerimsenturk5734/lab-report)
+![GitHub Issues](https://img.shields.io/github/issues/kerimsenturk5734/Image-Processing-Tool)
+![GitHub License](https://img.shields.io/github/license/kerimsenturk5734/Image-Processing-Tool)
+![GitHub Pull Requests](https://img.shields.io/github/issues-pr/kerimsenturk5734/Image-Processing-Tool)
+![GitHub Forks](https://img.shields.io/github/forks/kerimsenturk5734/Image-Processing-Tool)
+![GitHub Stars](https://img.shields.io/github/stars/kerimsenturk5734/Image-Processing-Tool)
 
 <img src="logo.png" alt="logo" width="128">
 
